@@ -1,0 +1,30 @@
+$quantity-w: 40px;
+$price-w: 50px;
+
+.item-list{
+    padding: 0px;
+    margin: 0px;
+
+    .item-row{
+      padding-bottom: 3px;
+      padding-right: 4px;
+      width: 100%;
+    }
+
+    .name-col, .quantity-col, .price-col {
+      font-size: 13px;
+      float: left;
+    }
+
+    .quantity-col{
+      width: $quantity-w;
+    }
+
+    .price-col{
+      width: $price-w;
+    }
+
+    .name-col{
+      width: calc(100% - #{$quantity-w} - #{$price-w});
+    }
+}
