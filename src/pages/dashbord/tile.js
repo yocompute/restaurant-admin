@@ -31,18 +31,18 @@ const useStyles = makeStyles({
     },
   });
 
-const Tile = ({data}) => {
+const Tile = ({data, onSelect}) => {
     const classes = useStyles();
 
     return (
-      <div className={classes.root}>
+      <div className={classes.root} onClick={() => onSelect(data)}>
       <Card variant="outlined">
         <CardContent>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
             {data.name}
           </Typography>
           <Typography variant="h5" component="h2">
-            {data.text}
+            {data.description}
           </Typography>
           <Typography className={classes.pos} color="textSecondary">
             my description

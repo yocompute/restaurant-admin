@@ -1,4 +1,7 @@
 import { createSelector } from 'reselect'
+import { PaymentStatus } from '../../const';
+import { selectQrcode } from '../qrcode/qrcode.selectors';
+
 export const selectPayments = (state) => state.payments
 
 export const selectPopulatedPayments = createSelector([selectPayments], (payments) => {
@@ -14,4 +17,12 @@ export const selectPopulatedPayments = createSelector([selectPayments], (payment
         });
     }
     return ps;
+});
+
+export const selectUnpaidPaymentsByQrcode = createSelector([selectPayments, selectQrcode], (payments, qrcode) => {
+    if(payments){
+        return payments.filter(p => p.qrcode && qrcode && p.qrcode._id === qrcode._id && p.status !== PaymentStatus.PAID);
+    }else{
+        return [];
+    }
 });

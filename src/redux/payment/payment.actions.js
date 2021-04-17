@@ -46,9 +46,10 @@ export const createPaymentFail = error => ({
     error
 })
 
-export const updatePayment = (data) => ({
+export const updatePayment = (data, id) => ({
     type: UPDATE_PAYMENT,
-    data
+    data,
+    id
 })
 
 export const updatePaymentSuccess = (payment) => ({

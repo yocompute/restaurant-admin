@@ -22,13 +22,13 @@ const UserApi = {
     return await Api.post(url, entity);
   },
 
-  async update(entity, id) {
+  async update(data, id) {
     const url =
       process.env.REACT_APP_MODE === "local"
         ? "/users.json"
         : Api.buildUrl(API_URL, `users/${id}`);
 
-    return await Api.put(url, entity);
+    return await Api.put(url, data);
   },
 };
 

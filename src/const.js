@@ -10,9 +10,14 @@ export const CART_PAGE = 'page/cart';
 export const PAYMENT_PAGE = 'pay/payment';
 export const ORDER_PAGE = 'page/order';
 
+export const OrderStatus = {
+    NEW: 'N',
+    PAID: 'P'
+}
 
 export const PaymentStatus = {
-    NEW: 'N'
+    NEW: 'N',
+    PAID: 'P'
 }
 
 export const PaymentMethod = {
@@ -28,8 +33,6 @@ export const Role = {
 }
 
 export const Roles = ["Super", "Admin", "Customer Service", "Driver"];
-
-
 
 export const Path = {
     Home: '/',
@@ -63,4 +66,9 @@ export const Permissions = {
 export const AppMode = {
     DEV: 'dev',
     PROD: 'prod'
+}
+
+export const QrcodeTag = {
+    Dine: 'dine',
+    Takeaway: 'takeaway'
 }

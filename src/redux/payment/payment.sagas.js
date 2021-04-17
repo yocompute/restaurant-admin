@@ -41,7 +41,7 @@ export function* createPayment(action) {
 
 export function* updatePayment(action) {
     try {
-        const { data, error, status } = yield call(PaymentApi.update, action.data);
+        const { data, error, status } = yield call(PaymentApi.update, action.data, action.id);
         if (httpSuccess(status)) {
             yield put(updatePaymentSuccess(data));
         } else {
