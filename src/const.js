@@ -54,7 +54,7 @@ export const Permissions = {
     [Path.Roles]: ["Super"],
     "/roles/new": ["Super"],
     "/roles/:id": ["Super"],
-    [Path.Payments]: ["Super"],
+    [Path.Payments]: ["Super", "Admin"],
     [Path.Orders]: ["Super", "Admin"],
     [Path.Categories]: ["Super", "Admin"],
     [Path.Products]: ["Super", "Admin"],

@@ -16,11 +16,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { setBrand, createBrand, updateBrand } from "../../redux/brand/brand.actions";
 import { fetchUsers } from "../../redux/user/user.actions";
@@ -32,6 +27,9 @@ import { DEFAULT_BUSINESS_HOURS } from "./BrandListPage";
 
 const useStyles = makeStyles(() => ({
   formCtrl: {
+    width: "100%",
+  },
+  row: {
     width: "100%",
   },
   uploadRow: {
@@ -57,12 +55,13 @@ function BrandFormPage({
   createBrand,
 }) {
   const classes = useStyles();
-  const { control, handleSubmit } = useForm();
   const history = useHistory();
+  const { control, handleSubmit } = useForm();
 
   const handleClose = () => {
     history.push('/brands');
   };
+
   const handleSave = (data, id) => {
     const d = {...data, deliverMethods: brand.deliverMethods, businessHours: brand.businessHours};
     if (id) {
@@ -71,6 +70,7 @@ function BrandFormPage({
       createBrand(d);
     }
   };
+
   const handleOk = (d) => {
     handleSave(d, brand._id);
     history.push('/brands');
@@ -132,7 +132,6 @@ function BrandFormPage({
     }
   }
 
-
   const handleWeekdayChange = (e) => {
     const day = e.target.name;
     const checked = e.target.checked;
@@ -159,7 +158,6 @@ function BrandFormPage({
   
     setBrand({...brand, businessHours});
   }
- 
 
   useEffect(() => {
     fetchUsers();
@@ -255,7 +253,82 @@ function BrandFormPage({
               />
             </Grid>
 
+            <Grid item xs={4}>
+              <Controller
+                control={control}
+                name="taxNumber"
+                defaultValue={brand.taxNumber}
+
+                as={
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    label="HST Number"
+                    type="text"
+                    fullWidth
+                  />
+                }
+              />
+            </Grid>
+
+            <Grid item xs={4}>
+              <Controller
+                control={control}
+                name="phoneNumber"
+                defaultValue={brand.phoneNumber}
+
+                as={
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Phone Number"
+                    type="text"
+                    fullWidth
+                  />
+                }
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <Controller
+                control={control}
+                name="street"
+                defaultValue={brand.street}
+
+                as={
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Street"
+                    type="text"
+                    fullWidth
+                  />
+                }
+              />
+            </Grid>
+
             <Grid item xs={3}>
+              <FormControl className={classes.formCtrl}>
+                <InputLabel id="brand-city-select-label">City</InputLabel>
+                <Controller
+                  control={control}
+                  name="city"
+                  defaultValue={brand.city && brand.city}
+                  rules={{ required: true }}
+                  as={
+                    <Select id="brand-city-select">
+                          <MenuItem key={"Richmond Hill"} value={"Richmond Hill"}>
+                            Richmond Hill
+                          </MenuItem>
+                    </Select>
+                  }
+                />
+              </FormControl>
+            </Grid>
+
+
+
+            <Grid item xs={4}>
               <div>Deliver Method:</div>
               <FormGroup>
 
@@ -322,14 +395,14 @@ function BrandFormPage({
             </Grid>
           </Grid>
 
-          <DialogActions>
+          <div className={classes.row}>
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
             <Button variant="contained" color="primary" type="submit">
               Submit
             </Button>
-          </DialogActions>
+          </div>
         </form>
       )}
 

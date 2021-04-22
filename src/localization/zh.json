@@ -1,0 +1,28 @@
+{
+    "translations": {
+        "Dashboard": "面板",
+
+        "Manage Roles": "角色管理",
+
+        "Manage Users": "用户管理",
+
+        "Manage Brands": "店铺管理",
+
+        "Manage Categories": "分类管理",
+
+        "Manage Qrcodes": "二维码管理",
+
+        "Manage Specs": "规格管理",
+
+        "Manage Products": "产品管理",
+
+        "Manage Orders": "订单管理",
+
+        "Manage Payments": "付款管理",
+
+        "Dine": "堂食",
+        "Takeaway": "外卖",
+        "Client Unpaid": "有未结帐单",
+        "Empty Table": "空桌"
+    }
+}

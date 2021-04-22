@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 
-// import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+// import { Link } from 'react-router-dom';
 // import PropTypes from "prop-types";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -47,11 +48,12 @@ const DashbordPage = ({
     fetchQrcodes,
     setQrcodeTag,
     fetchPayments,
+    fetchOrders,
     qrcodeTag,
     roles,
     payment,
     }) => {
-
+    const {t} = useTranslation();
     const classes = useStyles();
     // const history = useHistory();
     const handleTabChange = (event, v) => {
@@ -73,6 +75,12 @@ const DashbordPage = ({
     useEffect(() => {
         fetchPayments();
     }, [fetchPayments, qrcode, payment]);
+
+
+    useEffect(() => {
+        fetchOrders();
+    }, [fetchOrders, qrcode, payment]);
+ 
     const [checked, setChecked] = React.useState(true);
 
     // const handleChangeCheckbox = (event) => {
@@ -93,8 +101,8 @@ const DashbordPage = ({
         // </div>
         <div className={classes.paper}>
         <Tabs variant="fullWidth" value={qrcodeTag} onChange={handleTabChange}>
-            <Tab value={QrcodeTag.Dine} label="Dine" />
-            <Tab value={QrcodeTag.Takeaway} label="Takeaway" />
+            <Tab value={QrcodeTag.Dine} label={t("Dine")} />
+            <Tab value={QrcodeTag.Takeaway} label={t("Takeaway")} />
         </Tabs>
         {qrcodeTag === QrcodeTag.Dine && (
             // <Box p={3}>
@@ -127,5 +135,6 @@ export default connect(
         fetchOrders,
         setQrcodeTag,
         fetchPayments,
+        fetchOrders,
     }
 )(DashbordPage);

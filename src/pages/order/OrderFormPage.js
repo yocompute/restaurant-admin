@@ -26,8 +26,10 @@ import OrderEditor from "../../components/order/OrderEditor";
 import { selectAuthRoles } from "../../redux/auth/auth.selectors";
 import { Role } from "../../const";
 
+import OrderPrint from "../../components/order/OrderPrint";
+
 const useStyles = makeStyles(() => ({
-  root:{
+  root: {
     height: '100%',
   },
   formCtrl: {
@@ -67,7 +69,7 @@ function OrderFormPage({
     history.push('/orders');
   };
   const handleSave = (data, id) => {
-    const d = {...data, deliverMethods: order.deliverMethods, businessHours: order.businessHours};
+    const d = { ...data, deliverMethods: order.deliverMethods, businessHours: order.businessHours };
     if (id) {
       updateOrder(d, id);
     } else {
@@ -90,18 +92,21 @@ function OrderFormPage({
   // useEffect(() => {
   //   fetchUsers();
   // }, [fetchUsers]);
+  const handlePrint = () => {
+    window.print();
+  }
 
   useEffect(() => {
-    if(roles.indexOf(Role.Super) !== -1){
+    if (roles.indexOf(Role.Super) !== -1) {
       fetchProducts();
-    }else if(roles.indexOf(Role.Admin) !== -1){
-      fetchProducts({brand: brand._id});
+    } else if (roles.indexOf(Role.Admin) !== -1) {
+      fetchProducts({ brand: brand._id });
     }
   }, [fetchProducts]);
 
   return (
     <div className={classes.root}>
-      <h2>{order._id? "Edit Order":"Add New Order"}</h2>
+      <h2>{order._id ? "Edit Order" : "Add New Order"}</h2>
       {order && (
         <form onSubmit={handleSubmit(handleOk)}>
           <Grid container spacing={5}>
@@ -131,36 +136,36 @@ function OrderFormPage({
               </FormControl>
             </Grid>
 
-{
-  roles.indexOf(Role.Super) !== -1 &&
+            {
+              roles.indexOf(Role.Super) !== -1 &&
 
-            <Grid item xs={3}>
-              <FormControl className={classes.formCtrl}>
-                <InputLabel id="order-client-select-label">Client</InputLabel>
-                <Controller
-                  control={control}
-                  name="user"
-                  defaultValue={order.user && order.user._id}
-                  rules={{ required: true }}
-                  as={
-                    <Select id="order-user-select">
-                      {users &&
-                        users.map((user) => (
-                          <MenuItem key={user._id} value={user._id}>
-                            {user.username}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  }
-                />
-              </FormControl>
-            </Grid>
-}
+              <Grid item xs={3}>
+                <FormControl className={classes.formCtrl}>
+                  <InputLabel id="order-client-select-label">Client</InputLabel>
+                  <Controller
+                    control={control}
+                    name="user"
+                    defaultValue={order.user && order.user._id}
+                    rules={{ required: true }}
+                    as={
+                      <Select id="order-user-select">
+                        {users &&
+                          users.map((user) => (
+                            <MenuItem key={user._id} value={user._id}>
+                              {user.username}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                    }
+                  />
+                </FormControl>
+              </Grid>
+            }
             <Grid item xs={3}>
               <Controller
                 control={control}
                 name="Table"
-                defaultValue={order.qrcode? order.qrcode.name: ''}
+                defaultValue={order.qrcode ? order.qrcode.name : ''}
 
                 as={
                   <TextField
@@ -263,16 +268,30 @@ function OrderFormPage({
           </Grid>
 
           {/* <GridItem xs={12} lg={12}> */}
-              <Box pb={2}>
-                {/* <OrderEditor
+          <Box pb={2}>
+            {/* <OrderEditor
                     items={order.items}
                     products={products}
                     merchantId={order.brand}
                     onUpdateItemMap={handleUpdateItemMap}
                 /> */}
-                <OrderItems items={order.items} />
-              </Box>
-            {/* </GridItem> */}
+            <OrderItems items={order.items} />
+            <div class="summary-row">
+              <div class="title-col">Subtotal</div>
+              <div class="amount-col">${order.subTotal}</div>
+            </div>
+            <div class="row">
+              <div class="title-col">HST</div>
+              <div class="amount-col">${order.saleTax}</div>
+            </div>
+            <div class="row">
+              <div class="title-col">Total</div>
+              <div class="amount-col">${order.total}</div>
+            </div>
+          </Box>
+          {/* </GridItem> */}
+
+          <OrderPrint order={order} />
 
           <DialogActions>
             <Button onClick={handleClose} color="primary">
@@ -280,6 +299,9 @@ function OrderFormPage({
             </Button>
             <Button variant="contained" color="primary" type="submit">
               Submit
+            </Button>
+            <Button variant="contained" color="primary" onClick={handlePrint}>
+              Print
             </Button>
           </DialogActions>
         </form>
