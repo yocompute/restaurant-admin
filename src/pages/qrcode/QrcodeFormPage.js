@@ -17,7 +17,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import { setQrcode } from "../../redux/qrcode/qrcode.actions";
 import { fetchBrands } from "../../redux/brand/brand.actions";
 import { updateQrcode, createQrcode} from "../../redux/qrcode/qrcode.actions";
-import { CLIENT_HOST } from "../../const";
+import { CLIENT_HOST, QrcodeTag } from "../../const";
 import {Role} from "../../const";
 import { selectAuthUser, selectAuthRoles } from "../../redux/auth/auth.selectors";
 
@@ -196,6 +196,30 @@ function QrcodeFormPage({
                 )}
               />
             </FormControl>
+            </Grid>
+
+            <Grid item xs={3}>
+              <FormControl className={classes.formCtrl}>
+                <InputLabel id="qrcode-tag-select-label">Tag</InputLabel>
+                <Controller
+                  control={control}
+                  name="tag"
+                  defaultValue={qrcode.tag}
+                  rules={{ required: true }}
+                  as={
+                    <Select
+                      id="qrcode-tag-select"
+                    >
+                      <MenuItem key={"D"} value={QrcodeTag.Dine}>
+                        Dine
+                      </MenuItem>
+                      <MenuItem key={"T"} value={QrcodeTag.Takeaway}>
+                        Takeaway
+                      </MenuItem>
+                    </Select>
+                  }
+                />
+              </FormControl>
             </Grid>
           </Grid>
 

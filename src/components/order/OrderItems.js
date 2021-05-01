@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Orders = ({items}) => {
+const OrderItems = ({items}) => {
     const classes = useStyles();
     // const history = useHistory();
 
@@ -125,4 +125,4 @@ const mapStateToProps = state => ({
 export default connect(
     mapStateToProps,
     null
-)(Orders);
+)(OrderItems);

@@ -1,4 +1,8 @@
 import { createSelector } from 'reselect'
+import { OrderStatus, PaymentStatus } from '../../const';
+import { selectQrcode } from '../qrcode/qrcode.selectors';
+import { selectQrcodesByType } from '../qrcode/qrcode.selectors';
+
 export const selectOrders = (state) => state.orders
 
 export const selectPopulatedOrders = createSelector([selectOrders], (orders) => {
@@ -14,4 +18,32 @@ export const selectPopulatedOrders = createSelector([selectOrders], (orders) => 
         });
     }
     return ps;
+});
+
+export const selectUnpaidOrdersByQrcode = createSelector([selectOrders, selectQrcode], (orders, qrcode) => {
+    if(orders){
+        return orders.filter(p => p.qrcode && qrcode && p.qrcode._id === qrcode._id && p.status !== PaymentStatus.PAID);
+    }else{
+        return [];
+    }
+});
+
+
+export const selectUnpaidQrcodeOrdersByTag = createSelector([selectOrders, selectQrcodesByType], (orders, qrcodes) => {
+    if(orders){
+        const orderMap = {};
+        qrcodes.forEach(qrcode => orderMap[qrcode._id] = {qrcode, orders: []});
+        orders.forEach(order => {
+            
+            if(order.qrcode && order.status !== OrderStatus.PAID){
+                const bFound = qrcodes.find(q => q._id === order.qrcode._id);
+                if(bFound){
+                    orderMap[order.qrcode._id].orders.push(order);
+                }
+            }
+        });
+        return orderMap;
+    }else{
+        return null;
+    }
 });

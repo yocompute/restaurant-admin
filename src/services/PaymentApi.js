@@ -17,8 +17,8 @@ const PaymentApi = {
     return await Api.post(url, entity);
   },
 
-  async update(data) {
-    const url = process.env.REACT_APP_MODE === 'local' ? '/payments.json' : Api.buildUrl(API_URL, 'payments');
+  async update(data, id) {
+    const url = process.env.REACT_APP_MODE === 'local' ? '/payments.json' : Api.buildUrl(API_URL, `payments/${id}`);
 
     return await Api.put(url, data);
   },

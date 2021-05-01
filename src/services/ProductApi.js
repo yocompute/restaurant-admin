@@ -19,12 +19,12 @@ const ProductApi = {
     return await Api.post(url, entity);
   },
 
-  async update(entity, id) {
+  async update(data, id) {
     const url =
       process.env.REACT_APP_MODE === "local"
         ? "/products.json"
         : Api.buildUrl(API_URL, `products/${id}`);
-    return await Api.put(url, entity);
+    return await Api.put(url, data);
   },
 
   async upload(file, productId) {

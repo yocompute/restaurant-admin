@@ -1,0 +1,28 @@
+{
+    "translations": {
+        "Dashboard": "Dashboard",
+
+        "Manage Roles": "Manage Roles",
+
+        "Manage Users": "Manage Users",
+
+        "Manage Brands": "Manage Brands",
+
+        "Manage Categories": "Manage Categories",
+
+        "Manage Qrcodes": "Manage Qrcodes",
+
+        "Manage Specs": "Manage Specs",
+
+        "Manage Products": "Manage Products",
+
+        "Manage Orders": "Manage Orders",
+
+        "Manage Payments": "Manage Payments",
+
+        "Dine": "Dine",
+        "Takeaway": "Takeaway",
+        "Client Unpaid": "Client Unpaid",
+        "Empty Table": "Empty Table"
+    }
+}

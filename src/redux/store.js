@@ -12,7 +12,7 @@ import { productsReducer, productReducer, additionsReducer } from './product/pro
 import { cartReducer } from './cart/cart.reducers';
 import { pageReducer } from './page/page.reducers';
 import { paymentReducer, paymentsReducer } from './payment/payment.reducers';
-import { qrcodeReducer, qrcodesReducer } from './qrcode/qrcode.reducers';
+import { qrcodeReducer, qrcodesReducer, qrcodeTagReducer } from './qrcode/qrcode.reducers';
 import { specsReducer, specReducer } from './spec/spec.reducers';
 import { notificationReducer } from './notification/notification.reducers';
 import { roleReducer, rolesReducer } from './role/role.reducers';
@@ -41,6 +41,7 @@ export const rootReducer = combineReducers({
   order: orderReducer,
   qrcodes: qrcodesReducer,
   qrcode: qrcodeReducer,
+  qrcodeTag: qrcodeTagReducer,
   specs: specsReducer,
   spec: specReducer,
   notification: notificationReducer,

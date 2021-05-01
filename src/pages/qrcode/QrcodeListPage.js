@@ -37,6 +37,7 @@ const DEFAULT_QRCODE = {
   name: "",
   description: "",
   status: "",
+  tag: "",
   brand: "",
   actions: "",
 };

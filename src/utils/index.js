@@ -8,3 +8,11 @@ export const hasPermission = (roles, path) => {
         return false;
     }
 }
+
+export const toDateTimeString = (s) => {
+    const ds = s.split('T');
+    const date = ds ? ds[0]: '';
+    const ts= ds[1].split('.');
+    const time = ts[0]
+    return `${date} ${time}`;
+}

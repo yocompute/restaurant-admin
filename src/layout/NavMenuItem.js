@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+
 import { makeStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -17,6 +19,8 @@ const useStyles = makeStyles(() => ({
 
 const NavMenuItem = ({ data, onSelect }) => {
   const classes = useStyles();
+  const { t } = useTranslation();
+
   const handleClick = () => {
     onSelect(data.path);
   }
@@ -27,7 +31,7 @@ const NavMenuItem = ({ data, onSelect }) => {
           <ListItemIcon >
             <data.icon color="primary"/>
             </ListItemIcon>
-          <ListItemText>{data.text}</ListItemText>
+          <ListItemText>{t(data.text)}</ListItemText>
         </ListItem>
       </Tooltip>
     </NavLink>
