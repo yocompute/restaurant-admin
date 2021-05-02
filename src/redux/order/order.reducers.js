@@ -3,6 +3,7 @@ import {
     FETCH_ORDERS_SUCCESS,
     CREATE_ORDER_SUCCESS,
     UPDATE_ORDER_SUCCESS,
+    DELETE_ORDER_SUCCESS,
     SET_ORDER,
     SET_ORDER_STATUS,
   } from "./order.actions";
@@ -27,6 +28,10 @@ import {
       return { ...action.order };
     }
   
+    if (action && action.type === DELETE_ORDER_SUCCESS) {
+      return { ...action.order };
+    }
+
     return state;
   };
   

@@ -27,6 +27,14 @@ const OrderApi = {
     return await Api.put(url, data);
   },
 
+  async delete(id) {
+    const url =
+      process.env.REACT_APP_MODE === "local"
+        ? "/orders.json"
+        : Api.buildUrl(API_URL, `orders/${id}`);
+    return await Api.delete(url);
+  },
+
   async upload(file, orderId) {
     const formData = new FormData();
     formData.append("upload", file);

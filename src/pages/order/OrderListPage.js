@@ -14,6 +14,7 @@ import {
   fetchOrders,
   createOrder,
   updateOrder,
+  deleteOrder,
   setOrderStatus
 } from "../../redux/order/order.actions";
 
@@ -67,6 +68,7 @@ const OrderListPage = ({
   orderStatus,
   setOrder,
   updateOrder,
+  deleteOrder,
   fetchOrders,
   setOrderStatus
 }) => {
@@ -105,7 +107,7 @@ const OrderListPage = ({
 
   const handleCancelRow = (row) => {
     if (row && row._id) {
-      updateOrder({status: OrderStatus.Cancelled}, row._id);
+      deleteOrder(row._id);
       setTimeout(() => {
         fetchOrders({brand: brand._id});
       });
@@ -182,5 +184,6 @@ export default connect(mapStateToProps, {
   fetchOrders,
   createOrder,
   updateOrder,
+  deleteOrder,
   setOrderStatus
 })(OrderListPage);

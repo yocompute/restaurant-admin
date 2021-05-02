@@ -4,10 +4,12 @@ import {
   FETCH_ORDERS,
   CREATE_ORDER,
   UPDATE_ORDER,
+  DELETE_ORDER,
   fetchOrdersSuccess,
   fetchOrdersFail,
   createOrderSuccess,
   updateOrderSuccess,
+  deleteOrderSuccess,
 } from "./order.actions";
 
 import OrderApi from "../../services/OrderApi";
@@ -63,8 +65,26 @@ export function* updateOrder(action) {
   }
 }
 
+export function* deleteOrder(action) {
+  try {
+    const {data, error, status} = yield call(OrderApi.delete, action.id);
+    yield put(deleteOrderSuccess(data));
+    if(httpSuccess(status)){
+      // const {data, error, status} = yield call(OrderApi.get, null);
+      // yield put(fetchOrdersSuccess(data));
+    }else{
+      yield put(setNotification(error, status));
+    }
+  } catch (error) {
+    // yield put(addError({
+    //     ...error
+    // }))
+  }
+}
+
 export function* watchOrders() {
   yield takeLatest(FETCH_ORDERS, fetchOrders);
   yield takeLatest(CREATE_ORDER, createOrder);
   yield takeLatest(UPDATE_ORDER, updateOrder);
+  yield takeLatest(DELETE_ORDER, deleteOrder);
 }

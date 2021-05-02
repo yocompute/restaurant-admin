@@ -11,6 +11,10 @@ export const UPDATE_ORDER = "order/UPDATE_ORDER";
 export const UPDATE_ORDER_SUCCESS = "order/UPDATE_ORDER_SUCCESS";
 export const UPDATE_ORDER_FAIL = "order/UPDATE_ORDER_FAIL";
 
+export const DELETE_ORDER = "order/DELETE_ORDER";
+export const DELETE_ORDER_SUCCESS = "order/DELETE_ORDER_SUCCESS";
+export const DELETE_ORDER_FAIL = "order/DELETE_ORDER_FAIL";
+
 export const SET_ORDER = "order/SET_ORDER";
 export const SET_ORDER_STATUS = "order/SET_ORDER_STATUS";
 
@@ -58,6 +62,21 @@ export const updateOrderSuccess = (order) => ({
 
 export const updateOrderFail = (error) => ({
   type: UPDATE_ORDER_FAIL,
+  error,
+});
+
+export const deleteOrder = (id) => ({
+  type: DELETE_ORDER,
+  id,
+});
+
+export const deleteOrderSuccess = (order) => ({
+  type: DELETE_ORDER_SUCCESS,
+  order,
+});
+
+export const deleteOrderFail = (error) => ({
+  type: DELETE_ORDER_FAIL,
   error,
 });
 
