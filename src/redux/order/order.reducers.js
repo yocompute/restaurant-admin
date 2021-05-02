@@ -1,8 +1,10 @@
+import { OrderStatus } from "../../const";
 import {
     FETCH_ORDERS_SUCCESS,
     CREATE_ORDER_SUCCESS,
     UPDATE_ORDER_SUCCESS,
     SET_ORDER,
+    SET_ORDER_STATUS,
   } from "./order.actions";
   
   export const ordersReducer = (state = null, action) => {
@@ -28,3 +30,10 @@ import {
     return state;
   };
   
+  export const orderStatusReducer = (state = OrderStatus.New, action) => {
+    if (action && action.type === SET_ORDER_STATUS) {
+      return action.status;
+    }
+  
+    return state;
+  };

@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
-import Button from "@material-ui/core/Button";
 
+import { AddTextButton } from "../../components/common/Button";
 import ListTable from "../../components/table/ListTable";
 // import SpecDialog from "./SpecDialog";
 import {
@@ -53,7 +53,7 @@ const SpecListPage = ({
     fetchSpecs();
   }, [fetchSpecs]);
 
-  const handleOpenSpecDialog = () => {
+  const handleAdd = () => {
     setSpec(DEFAULT_SPEC);
     history.push("/specs/new");
   };
@@ -67,13 +67,7 @@ const SpecListPage = ({
 
   return (
     <div>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpenSpecDialog}
-      >
-        Add
-      </Button>
+      <AddTextButton onClick={handleAdd} />
       {specs && (
         <ListTable
           label="spec"

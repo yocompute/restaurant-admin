@@ -12,7 +12,7 @@ const OrderPrint = ({ order }) => {
         <div class="center">HST {order.brand.taxNumber}</div>
         <div class="center">------------------------------</div>
         <div class="center">{order.qrcode ? order.qrcode.name : ''} {order.qrcode ? order.qrcode.tag : ''}</div>
-        <div class="center">{toDateTimeString(order.createUTC)}</div>
+        <div class="center">{toDateTimeString(order.createUTC ? order.createUTC : new Date().toISOString())}</div>
         <div class="center">------------------------------</div>
         {
             order.items && order.items.length > 0 &&

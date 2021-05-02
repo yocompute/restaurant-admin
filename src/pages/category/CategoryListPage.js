@@ -6,8 +6,7 @@ import {
   setCategory,
   fetchCategories,
 } from "../../redux/category/category.actions";
-import Button from "@material-ui/core/Button";
-
+import { AddTextButton } from "../../components/common/Button";
 import { selectAuthRoles, selectAuthUser } from "../../redux/auth/auth.selectors";
 import { Role } from "../../const";
 import { useHistory } from "react-router-dom";
@@ -61,7 +60,7 @@ const CategoryListPage = ({
     }
   }, [fetchCategories]);
 
-  const handleOpenCategoryForm = () => {
+  const handleAdd = () => {
     setCategory(DEFAULT_CATEGORY);
     history.push('/categories/new');
   };
@@ -75,13 +74,8 @@ const CategoryListPage = ({
 
   return (
     <div>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpenCategoryForm}
-      >
-        Add
-      </Button>
+      <AddTextButton onClick={handleAdd} />
+
       {categories && (
         <ListTable
           lable="category"

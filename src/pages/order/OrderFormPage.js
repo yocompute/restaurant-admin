@@ -3,6 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Box from "@material-ui/core/Box";
@@ -24,7 +25,7 @@ import OrderItems from "../../components/order/OrderItems";
 
 import OrderEditor from "../../components/order/OrderEditor";
 import { selectAuthRoles } from "../../redux/auth/auth.selectors";
-import { Role } from "../../const";
+import { OrderStatus, Role } from "../../const";
 
 import OrderPrint from "../../components/order/OrderPrint";
 
@@ -52,6 +53,7 @@ const useStyles = makeStyles(() => ({
 function OrderFormPage({
   roles,
   users,
+  qrcodes,
   brand,
   products,
   setOrder,
@@ -62,12 +64,14 @@ function OrderFormPage({
   fetchProducts,
 }) {
   const classes = useStyles();
-  const { control, handleSubmit } = useForm();
   const history = useHistory();
+  const {t} = useTranslation();
+  const { control, handleSubmit } = useForm();
 
   const handleClose = () => {
     history.push('/orders');
   };
+
   const handleSave = (data, id) => {
     const d = { ...data, deliverMethods: order.deliverMethods, businessHours: order.businessHours };
     if (id) {
@@ -76,6 +80,7 @@ function OrderFormPage({
       createOrder(d);
     }
   };
+
   const handleOk = (d) => {
     handleSave(d, order._id);
     history.push('/orders');
@@ -115,6 +120,28 @@ function OrderFormPage({
             </Grid >
 
             <Grid item xs={3}>
+                <FormControl className={classes.formCtrl}>
+                  <InputLabel id="order-qrcode-select-label">Table</InputLabel>
+                  <Controller
+                    control={control}
+                    name="qrcode"
+                    defaultValue={order.qrcode && order.qrcode._id}
+                    rules={{ required: true }}
+                    as={
+                      <Select id="order-qrcode-select">
+                        {qrcodes &&
+                          qrcodes.map((qrcode) => (
+                            <MenuItem key={qrcode._id} value={qrcode._id}>
+                              {qrcode.name}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                    }
+                  />
+                </FormControl>
+            </Grid>
+
+            <Grid item xs={3}>
               <FormControl className={classes.formCtrl}>
                 <InputLabel id="order-status-select-label">Status</InputLabel>
                 <Controller
@@ -124,11 +151,14 @@ function OrderFormPage({
                   rules={{ required: true }}
                   as={
                     <Select id="order-status-select" value={order.status}>
-                      <MenuItem key={"A"} value={"A"}>
-                        Active
+                      <MenuItem key={OrderStatus.New} value={OrderStatus.New}>
+                        {t("New")}
                     </MenuItem>
-                      <MenuItem key={"I"} value={"I"}>
-                        Inactive
+                      <MenuItem key={OrderStatus.Paid} value={OrderStatus.Paid}>
+                        {t("Paid")}
+                    </MenuItem>
+                    <MenuItem key={OrderStatus.Cancelled} value={OrderStatus.Cancelled}>
+                        {t("Cancelled")}
                     </MenuItem>
                     </Select>
                   }
@@ -161,23 +191,7 @@ function OrderFormPage({
                 </FormControl>
               </Grid>
             }
-            <Grid item xs={3}>
-              <Controller
-                control={control}
-                name="Table"
-                defaultValue={order.qrcode ? order.qrcode.name : ''}
 
-                as={
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    label="Table"
-                    type="text"
-                    fullWidth
-                  />
-                }
-              />
-            </Grid>
 
             <Grid item xs={12}>
               <Controller
@@ -342,6 +356,7 @@ const mapStateToProps = (state) => ({
   products: state.products,
   order: state.order,
   users: state.users,
+  qrcodes: state.qrcodes
 });
 
 export default connect(mapStateToProps, {

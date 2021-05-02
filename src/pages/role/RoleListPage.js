@@ -3,9 +3,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 // import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
-import Button from "@material-ui/core/Button";
-
-// import Header from '../../components/common/Header'
+import { AddTextButton } from "../../components/common/Button";
 import ListTable from "../../components/table/ListTable";
 
 import {
@@ -51,7 +49,7 @@ const RoleListPage = ({
     fetchRoles();
   }, [fetchRoles]);
 
-  const handleOpenRoleFormPage = () => {
+  const handleAdd = () => {
     setRole(DEFAULT_ROLE);
     history.push("/roles/new");
   };
@@ -74,14 +72,7 @@ const RoleListPage = ({
 
   return (
     <div>
-      <Button
-        data-testid="add-btn"
-        variant="contained"
-        color="primary"
-        onClick={handleOpenRoleFormPage}
-      >
-        Add
-      </Button>
+      <AddTextButton onClick={handleAdd} />
       {roles && roles.length > 0 && (
         <ListTable
           label="role"

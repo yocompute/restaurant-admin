@@ -110,12 +110,12 @@ const DineTab = ({
             })
             fetchQrcodesSuccess(qrcodes);
             setQrcode(qrcode);
-            // fetchPayments({qrcode: qrcode._id, status: PaymentStatus.NEW});
+            // fetchPayments({qrcode: qrcode._id, status: PaymentStatus.New});
         }
     }
 
     const handlePay = (payment) => {
-        updatePayment({ status: PaymentStatus.PAID }, payment._id);
+        updatePayment({ status: PaymentStatus.Paid }, payment._id);
     }
     
     const handlePrint = () => {
@@ -144,7 +144,7 @@ const DineTab = ({
                     payments &&
                     payments.map(payment => (
                         <div className={classes.payment} key={payment._id} >
-                            <div className={classes.status}>Status: {payment.status === PaymentStatus.NEW ? 'Not Paid' : 'Paid'}</div>
+                            <div className={classes.status}>Status: {payment.status === PaymentStatus.New ? 'Not Paid' : 'Paid'}</div>
                             <OrderItems items={payment.items} />
                             <OrderSummary order={payment} />
                             <div className={classes.buttonRow}>
