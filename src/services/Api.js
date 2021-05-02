@@ -57,6 +57,23 @@ const Api = {
   },
 
   /**
+   * @param {*} url
+   * return { data, error, status }
+   */
+  async delete(url) {
+    try {
+      const tokenId = Cookies.get(JWT_COOKIE);
+      const config = {
+        headers: { Authorization: `Bearer ${tokenId}` }
+      };
+      const r = await axios.delete(url, config);
+      return { ...r.data, status: r.status };
+    } catch (e) {
+      return { ...e.response.data, status: e.response.status };
+    }
+  },
+
+  /**
    * @param {*} rootUrl
    * @param {*} path
    * @param {*} params string or js object, support path/:id and path?q=x&p=y
