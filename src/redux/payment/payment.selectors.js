@@ -21,7 +21,7 @@ export const selectPopulatedPayments = createSelector([selectPayments], (payment
 
 export const selectUnpaidPaymentsByQrcode = createSelector([selectPayments, selectQrcode], (payments, qrcode) => {
     if(payments){
-        return payments.filter(p => p.qrcode && qrcode && p.qrcode._id === qrcode._id && p.status !== PaymentStatus.PAID);
+        return payments.filter(p => p.qrcode && qrcode && p.qrcode._id === qrcode._id && p.status !== PaymentStatus.Paid);
     }else{
         return [];
     }

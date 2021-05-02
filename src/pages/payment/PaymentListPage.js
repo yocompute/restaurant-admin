@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 
-import Button from '@material-ui/core/Button';
-
+import { AddTextButton } from "../../components/common/Button";
 import ListTable from '../../components/table/ListTable';
 import { fetchPayments, setPayment } from '../../redux/payment/payment.actions';
 import { selectPopulatedPayments } from '../../redux/payment/payment.selectors';
@@ -38,7 +37,7 @@ const PaymentListPage = ({ fetchPayments, setPayment, payments }) => {
     }, [fetchPayments]);
 
 
-    const handleOpenPaymentDialog = () => {
+    const handleAdd = () => {
         setPayment(DEFAULT_BRAND);
         history.push('/payments/new')
     }
@@ -52,7 +51,7 @@ const PaymentListPage = ({ fetchPayments, setPayment, payments }) => {
 
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleOpenPaymentDialog}>Add</Button>
+            <AddTextButton onClick={handleAdd} />
             {
                 payments &&
                 <ListTable

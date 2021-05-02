@@ -3,9 +3,8 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 // import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
-import Button from "@material-ui/core/Button";
 
-// import Header from '../../components/common/Header'
+import { AddTextButton } from "../../components/common/Button";
 import ListTable from "../../components/table/ListTable";
 
 import {
@@ -57,7 +56,7 @@ const UserListPage = ({
     fetchUsers();
   }, [fetchUsers]);
 
-  const handleOpenUserFormPage = () => {
+  const handleAdd = () => {
     setUser(DEFAULT_USER);
     history.push("/users/new");
   };
@@ -80,14 +79,7 @@ const UserListPage = ({
 
   return (
     <div>
-      <Button
-        data-testid="add-btn"
-        variant="contained"
-        color="primary"
-        onClick={handleOpenUserFormPage}
-      >
-        Add
-      </Button>
+      <AddTextButton onClick={handleAdd} />
       {users && (
         <ListTable
           label="user"

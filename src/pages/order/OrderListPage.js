@@ -2,18 +2,27 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
+
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+import { AddTextButton } from "../../components/common/Button";
 import ListTable from "../../components/table/ListTable";
 import {
   setOrder,
   fetchOrders,
   createOrder,
   updateOrder,
+  setOrderStatus
 } from "../../redux/order/order.actions";
-import { selectAuthUser, selectAuthRoles } from "../../redux/auth/auth.selectors";
 
-import {Role} from "../../const";
+
+import { selectAuthUser, selectAuthRoles } from "../../redux/auth/auth.selectors";
+import { selectOrdersByStatus } from "../../redux/order/order.selectors";
+
+import {Role, OrderStatus} from "../../const";
+import { useTranslation } from "react-i18next";
 
 const columns = [
   { field: "createUTC", label: "Created Date", type: "date" },
@@ -55,10 +64,14 @@ const OrderListPage = ({
   brand,
   roles,
   orders,
+  orderStatus,
   setOrder,
+  updateOrder,
   fetchOrders,
+  setOrderStatus
 }) => {
   const history = useHistory();
+  const {t} = useTranslation();
 
   useEffect(() => {
     setOrder(DEFAULT_ORDER);
@@ -78,7 +91,7 @@ const OrderListPage = ({
   }, [fetchOrders]);
 
 
-  const handleOpenOrderDialog = () => {
+  const handleAddOrder = () => {
     setOrder(DEFAULT_ORDER);
     history.push('/orders/new')
   }
@@ -90,25 +103,59 @@ const OrderListPage = ({
     }, 100)
   };
 
-  return (
-    <div>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpenOrderDialog}
-      >
-        Add
-      </Button>
+  const handleCancelRow = (row) => {
+    if (row && row._id) {
+      updateOrder({status: OrderStatus.Cancelled}, row._id);
+      setTimeout(() => {
+        fetchOrders({brand: brand._id});
+      });
+    }
+  }
+  const handleTabChange = (event, v) => {
+    setOrderStatus(v);
+  }
 
-      {orders && (
-        <ListTable
-          label="order"
-          defaultSort={defaultSort}
-          columns={columns}
-          rows={orders}
-          onEditRow={handleEditRow}
-        />
-      )}
+  
+  return (
+      <div>
+
+        <AddTextButton onClick={handleAddOrder} />
+
+        <Tabs variant="fullWidth" value={orderStatus} onChange={handleTabChange}>
+            <Tab value={OrderStatus.New} label={t("New")} />
+            <Tab value={OrderStatus.Paid} label={t("Paid")} />
+            <Tab value={OrderStatus.Cancelled} label={t("Cancelled")} />
+        </Tabs>
+        
+        {orderStatus === OrderStatus.New && orders && 
+            <ListTable
+              label="order"
+              defaultSort={defaultSort}
+              columns={columns}
+              rows={orders}
+              onEditRow={handleEditRow}
+              onDeleteRow={handleCancelRow}
+            />
+        }
+        {orderStatus === OrderStatus.Paid && orders &&
+            <ListTable
+              label="order"
+              defaultSort={defaultSort}
+              columns={columns}
+              rows={orders}
+              onEditRow={handleEditRow}
+            />
+        }
+        {orderStatus === OrderStatus.Cancelled && orders &&
+            <ListTable
+              label="order"
+              defaultSort={defaultSort}
+              columns={columns}
+              rows={orders}
+              onEditRow={handleEditRow}
+            />
+        }
+
     </div>
   );
 };
@@ -126,7 +173,8 @@ OrderListPage.propTypes = {
 const mapStateToProps = (state) => ({
   brand: state.brand,
   roles: selectAuthRoles(state),
-  orders: state.orders,
+  orders: selectOrdersByStatus(state),
+  orderStatus: state.orderStatus
 });
 
 export default connect(mapStateToProps, {
@@ -134,4 +182,5 @@ export default connect(mapStateToProps, {
   fetchOrders,
   createOrder,
   updateOrder,
+  setOrderStatus
 })(OrderListPage);

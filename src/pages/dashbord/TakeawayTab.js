@@ -65,7 +65,7 @@ const TakeawayTab = ({
 
     const handleClick = (qrcode) => {
         if(qrcode){
-            fetchOrders({qrcode: qrcode._id, status: OrderStatus.NEW});
+            fetchOrders({qrcode: qrcode._id, status: OrderStatus.New});
         }
     };
 

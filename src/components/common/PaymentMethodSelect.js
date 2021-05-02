@@ -9,7 +9,7 @@ import {PaymentMethod} from '../../const';
 
 export const PaymentMethodSelect = ({onSelect}) => {
 
-    const [paymentMethod, setPaymentMethod] = useState(PaymentMethod.CREDIT_CARD);
+    const [paymentMethod, setPaymentMethod] = useState(PaymentMethod.CreditCard);
 
     const handleSelect = (paymentMethod) => {
         setPaymentMethod(paymentMethod);
@@ -34,10 +34,10 @@ export const PaymentMethodSelect = ({onSelect}) => {
         } */}
 
         {
-          <Link className={paymentMethod === PaymentMethod.CREDIT_CARD ? 'btn-toggle active' : 'btn-toggle'}
+          <Link className={paymentMethod === PaymentMethod.CreditCard ? 'btn-toggle active' : 'btn-toggle'}
                 style={{ textDecoration: 'none' }}
                 to={{ pathname: "/creditcard" }}
-                onClick={() => handleSelect(PaymentMethod.CREDIT_CARD)} >
+                onClick={() => handleSelect(PaymentMethod.CreditCard)} >
 
             <div className="inner">
               <div className="payment-icon i-card">
@@ -51,8 +51,8 @@ export const PaymentMethodSelect = ({onSelect}) => {
           </Link>
         }
         {
-          <div className={paymentMethod === PaymentMethod.WECHAT ? 'btn-toggle active' : 'btn-toggle'}
-            onClick={() => handleSelect(PaymentMethod.WECHAT)}>
+          <div className={paymentMethod === PaymentMethod.Wechat ? 'btn-toggle active' : 'btn-toggle'}
+            onClick={() => handleSelect(PaymentMethod.Wechat)}>
             <div className="inner">
               <div className="payment-icon i-wechat">
                 <svg className="icon" viewBox="0 0 1144 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="21" height="21">

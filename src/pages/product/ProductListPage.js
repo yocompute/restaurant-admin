@@ -3,11 +3,8 @@ import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import Button from "@material-ui/core/Button";
-
-// import Header from '../../components/common/Header'
+import { AddTextButton } from "../../components/common/Button";
 import ListTable from "../../components/table/ListTable";
-// import ProductFormPage from "./ProductFormPage";
 
 import {
   setProduct,
@@ -72,7 +69,7 @@ const ProductListPage = ({
 }) => {
   const history = useHistory();
 
-  const handleNewProductFormPage = () => {
+  const handleAdd = () => {
     setProduct(DEFAULT_PRODUCT);
     // setDialogOpen(true);
     history.push("/products/new");
@@ -99,13 +96,7 @@ const ProductListPage = ({
   
   return (
     <div>
-      <Button data-testid="add-btn"
-        variant="contained"
-        color="primary"
-        onClick={handleNewProductFormPage}
-      >
-        Add
-      </Button>
+      <AddTextButton onClick={handleAdd} />
 
       {products && (
         <ListTable

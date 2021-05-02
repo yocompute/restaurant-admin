@@ -100,21 +100,17 @@ const DashbordPage = ({
         //     </div>
         // </div>
         <div className={classes.paper}>
-        <Tabs variant="fullWidth" value={qrcodeTag} onChange={handleTabChange}>
-            <Tab value={QrcodeTag.Dine} label={t("Dine")} />
-            <Tab value={QrcodeTag.Takeaway} label={t("Takeaway")} />
-        </Tabs>
-        {qrcodeTag === QrcodeTag.Dine && (
-            // <Box p={3}>
-            <DineTab  />
-            // </Box>
-        )}
-        {qrcodeTag === QrcodeTag.Takeaway && (
-            // <Box p={3}>
-            <TakeawayTab />
-            // </Box>
-        )}
-    </div>
+            <Tabs variant="fullWidth" value={qrcodeTag} onChange={handleTabChange}>
+                <Tab value={QrcodeTag.Dine} label={t("Dine")} />
+                <Tab value={QrcodeTag.Takeaway} label={t("Takeaway")} />
+            </Tabs>
+            {qrcodeTag === QrcodeTag.Dine && (
+                <DineTab  />
+            )}
+            {qrcodeTag === QrcodeTag.Takeaway && (
+                <TakeawayTab />
+            )}
+        </div>
     )
 }
 

@@ -23,6 +23,12 @@
         "Dine": "堂食",
         "Takeaway": "外卖",
         "Client Unpaid": "有未结帐单",
-        "Empty Table": "空桌"
+        "Empty Table": "空桌",
+
+        "Add": "添加",
+
+        "New": "新建",
+        "Paid": "已付款",
+        "Cancelled": "已取消"
     }
 }
