@@ -12,6 +12,7 @@ export const UPDATE_ORDER_SUCCESS = "order/UPDATE_ORDER_SUCCESS";
 export const UPDATE_ORDER_FAIL = "order/UPDATE_ORDER_FAIL";
 
 export const SET_ORDER = "order/SET_ORDER";
+export const SET_ORDER_STATUS = "order/SET_ORDER_STATUS";
 
 // action creators
 export const fetchOrders = (query) => ({
@@ -63,4 +64,9 @@ export const updateOrderFail = (error) => ({
 export const setOrder = (order) => ({
   type: SET_ORDER,
   order,
+});
+
+export const setOrderStatus = (status) => ({
+  type: SET_ORDER_STATUS,
+  status,
 });

@@ -1,13 +1,26 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
-// import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+// import { Link } from 'react-router-dom';
 // import PropTypes from "prop-types";
 
 import { makeStyles } from '@material-ui/core/styles';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Tile from './tile';
 
-import Tile from './tile'
+import {
+    fetchQrcodes,
+    setQrcodeTag,
+} from "../../redux/qrcode/qrcode.actions";
+import { selectAuthRoles } from "../../redux/auth/auth.selectors";
+import { fetchOrders } from "../../redux/order/order.actions";
+import { fetchPayments } from "../../redux/payment/payment.actions";
+import { QrcodeTag, Role } from "../../const";
 
+import DineTab from './DineTab';
+import TakeawayTab from './TakeawayTab';
 
 const useStyles = makeStyles({
     tileRow: {
@@ -29,21 +42,45 @@ const useStyles = makeStyles({
     },
 });
 
-
-const tiles = [
-    { name: 'Visitors', text: '120' },
-    { name: 'Sales', text: '$3218' },
-    { name: 'Activity', text: '500' },
-    { name: 'Events', text: '3' },
-];
-
-const DashbordPage = () => {
-
+const DashbordPage = ({
+    brand,
+    qrcode,
+    fetchQrcodes,
+    setQrcodeTag,
+    fetchPayments,
+    fetchOrders,
+    qrcodeTag,
+    roles,
+    payment,
+    }) => {
+    const {t} = useTranslation();
     const classes = useStyles();
-    // const bull = <span className={classes.bullet}>•</span>;
-    // useEffect(() => {
-    //     fetchUsers();
-    // }, [fetchUsers]);
+    // const history = useHistory();
+    const handleTabChange = (event, v) => {
+        setQrcodeTag(v);
+    }
+
+    useEffect(() => {
+        if(roles){
+            if (roles.indexOf(Role.Super) !== -1) {
+                fetchQrcodes();
+            } else if (roles.indexOf(Role.Admin) !== -1) {
+                if(brand){
+                    fetchQrcodes({ brand: brand._id });
+                }
+            }
+        }
+    }, [fetchQrcodes, brand]);
+
+    useEffect(() => {
+        fetchPayments();
+    }, [fetchPayments, qrcode, payment]);
+
+
+    useEffect(() => {
+        fetchOrders();
+    }, [fetchOrders, qrcode, payment]);
+ 
     const [checked, setChecked] = React.useState(true);
 
     // const handleChangeCheckbox = (event) => {
@@ -51,28 +88,49 @@ const DashbordPage = () => {
     // };
     // const [value, setValue] = React.useState('female');
 
-    // const handleChange = (event) => {
-    //   setValue(event.target.value);
-    // };
     return (
-        <div>
-            <div className={classes.tileRow}>
-                {
-                    tiles &&
-                    tiles.map(tile => (
-                        <Tile key={tile.name} data={tile} />
-                    ))
-                }
-            </div>
+        // <div>
+        //     <div className={classes.tileRow}>
+        //         {
+        //             qrcodes &&
+        //             qrcodes.map(tile => (
+        //                 <Tile key={tile.name} data={tile} onSelect={handleClick}/>
+        //             ))
+        //         }
+        //     </div>
+        // </div>
+        <div className={classes.paper}>
+            <Tabs variant="fullWidth" value={qrcodeTag} onChange={handleTabChange}>
+                <Tab value={QrcodeTag.Dine} label={t("Dine")} />
+                <Tab value={QrcodeTag.Takeaway} label={t("Takeaway")} />
+            </Tabs>
+            {qrcodeTag === QrcodeTag.Dine && (
+                <DineTab  />
+            )}
+            {qrcodeTag === QrcodeTag.Takeaway && (
+                <TakeawayTab />
+            )}
         </div>
     )
 }
 
 const mapStateToProps = state => ({
-    users: state.users
+    roles: selectAuthRoles(state),
+    brand: state.brand,
+    qrcodes: state.qrcodes,
+    qrcodeTag: state.qrcodeTag,
+    orders: state.orders,
+    qrcode: state.qrcode,
+    payment: state.payment
 });
 
 export default connect(
     mapStateToProps,
-    null
+    {
+        fetchQrcodes,
+        fetchOrders,
+        setQrcodeTag,
+        fetchPayments,
+        fetchOrders,
+    }
 )(DashbordPage);

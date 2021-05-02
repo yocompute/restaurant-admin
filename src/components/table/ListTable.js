@@ -19,7 +19,7 @@ import {
 import TableHeader from "./TableHeader";
 import ListCell from "./ListCell";
 
-const ListTable = ({ label, defaultSort, columns, rows, onEditRow }) => {
+const ListTable = ({ label, defaultSort, columns, rows, onEditRow, onDeleteRow }) => {
   const [sort, setSort] = useState(defaultSort);
 
   const sorts = (a, b) => {
@@ -64,6 +64,7 @@ const ListTable = ({ label, defaultSort, columns, rows, onEditRow }) => {
                   row={row}
                   col={col}
                   onEditRow={onEditRow}
+                  onDeleteRow={onDeleteRow}
                 />
               ))}
             </TableRow>

@@ -22,13 +22,13 @@ const RoleApi = {
     return await Api.post(url, entity);
   },
 
-  async update(entity, id) {
+  async update(data, id) {
     const url =
       process.env.REACT_APP_MODE === "local"
         ? "/roles.json"
         : Api.buildUrl(API_URL, `roles/${id}`);
 
-    return await Api.put(url, entity);
+    return await Api.put(url, data);
   },
 };
 

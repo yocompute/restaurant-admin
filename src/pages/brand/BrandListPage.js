@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
+import { AddTextButton } from "../../components/common/Button";
 import ListTable from "../../components/table/ListTable";
 import {
   setBrand,
@@ -81,7 +81,7 @@ const BrandListPage = ({
   }, [fetchBrands]);
 
 
-  const handleOpenBrandDialog = () => {
+  const handleAdd = () => {
     setBrand(DEFAULT_BRAND);
     history.push('/brands/new');
   }
@@ -95,13 +95,7 @@ const BrandListPage = ({
 
   return (
     <div>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpenBrandDialog}
-      >
-        Add
-      </Button>
+      <AddTextButton onClick={handleAdd} />
 
       {brands && (
         <ListTable

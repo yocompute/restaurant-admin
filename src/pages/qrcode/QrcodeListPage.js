@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import Button from "@material-ui/core/Button";
-
+import { AddTextButton } from "../../components/common/Button";
 // import Header from '../../components/common/Header'
 import ListTable from "../../components/table/ListTable";
 
@@ -37,6 +36,7 @@ const DEFAULT_QRCODE = {
   name: "",
   description: "",
   status: "",
+  tag: "",
   brand: "",
   actions: "",
 };
@@ -58,7 +58,7 @@ const QrcodeListPage = ({
   }, [fetchQrcodes]);
 
 
-  const handleOpenQrcodeForm = () => {
+  const handleAdd = () => {
     setQrcode(DEFAULT_QRCODE);
     history.push('/qrcodes/new');
   };
@@ -72,13 +72,7 @@ const QrcodeListPage = ({
 
   return (
     <div>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpenQrcodeForm}
-      >
-        Add
-      </Button>
+      <AddTextButton onClick={handleAdd} />
 
       {qrcodes && (
         <ListTable

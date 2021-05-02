@@ -7,13 +7,18 @@ import {
 } from "@material-ui/core";
 
 import EditIcon from '@material-ui/icons/Edit';
+import ClearIcon from '@material-ui/icons/Clear';
 
-const ListCell = ({ col, row, onEditRow }) => {
+const ListCell = ({ col, row, onEditRow, onDeleteRow }) => {
     // const [data, setData] = useState(row ? row[col.field] : null);
     const data = row ? row[col.field] : null;
 
     const handleEdit = () => {
         onEditRow(row);
+    }
+
+    const handleDelete = () => {
+        onDeleteRow(row);
     }
 
     const toDateString = (s) => {
@@ -45,10 +50,20 @@ const ListCell = ({ col, row, onEditRow }) => {
                 </Avatar>
             </TableCell>
         } else if (col.field === 'actions') {
-            return <TableCell key={col.field} onClick={handleEdit}>
-                <IconButton aria-label="edit">
-                    <EditIcon />
-                </IconButton>
+            return <TableCell key={col.field}>
+                {
+                    onEditRow &&
+                    <IconButton aria-label="edit" onClick={handleEdit}>
+                        <EditIcon />
+                    </IconButton>
+                }
+                {
+                    onDeleteRow &&
+                    <IconButton aria-label="delete" onClick={handleDelete}>
+                        <ClearIcon />
+                    </IconButton>
+                }
+
             </TableCell>
         } else if (col.type === 'object') {
             return <TableCell key={col.field}>

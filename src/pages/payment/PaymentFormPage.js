@@ -16,6 +16,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 
 import { fetchUsers } from '../../redux/user/user.actions';
 import { updatePayment, createPayment} from '../../redux/payment/payment.actions';
+import { useTranslation } from "react-i18next";
+import { PaymentStatus } from "../../const";
 
 const useStyles = makeStyles(() => ({
     formCtrl: {
@@ -24,8 +26,10 @@ const useStyles = makeStyles(() => ({
 }));
 function PaymentFormPage({ users, fetchUsers, data, updatePayment, createPayment }) {
     const classes = useStyles();
-    const { control, handleSubmit } = useForm();
     const history = useHistory();
+    const {t} = useTranslation();
+
+    const { control, handleSubmit } = useForm();
     const handleClose = () => {
         history.push('/payments');
     };
@@ -91,8 +95,15 @@ function PaymentFormPage({ users, fetchUsers, data, updatePayment, createPayment
                             rules={{ required: true }}
                             as={
                                 <Select id="product-status-select">
-                                    <MenuItem key={"A"} value={"A"}>Active</MenuItem>
-                                    <MenuItem key={"I"} value={"I"}>Inactive</MenuItem>
+                      <MenuItem key={PaymentStatus.New} value={PaymentStatus.New}>
+                        {t("New")}
+                    </MenuItem>
+                      <MenuItem key={PaymentStatus.Paid} value={PaymentStatus.Paid}>
+                        {t("Paid")}
+                    </MenuItem>
+                    <MenuItem key={PaymentStatus.Cancelled} value={PaymentStatus.Cancelled}>
+                        {t("Cancelled")}
+                    </MenuItem>
                                 </Select>
                             }
                         />

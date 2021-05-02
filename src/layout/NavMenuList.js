@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import { connect } from 'react-redux';
+
+
 import List from "@material-ui/core/List";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import BrandingWatermarkIcon from "@material-ui/icons/BrandingWatermark";
@@ -17,13 +19,12 @@ import {Path} from "../const";
 import {hasPermission} from '../utils';
 
 import { selectAuthRoles } from '../redux/auth/auth.selectors';
-
 const menus = [
   {
     path: Path.Home,
-    text: "Dashbord",
+    text: "Dashboard",
     icon: DashboardIcon,
-    tip: "Dashbord",
+    tip: "Dashboard",
     selected: true
   },
   {

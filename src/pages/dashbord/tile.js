@@ -10,12 +10,20 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 // import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { useTranslation } from 'react-i18next';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
       padding: '10px',
       flexGrow: 1
       // minWidth: 275,
+    },
+    selected: {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText
+    },
+    unselected: {
+      backgroundColor: theme.palette.background.paper
     },
     bullet: {
       display: 'inline-block',
@@ -24,28 +32,27 @@ const useStyles = makeStyles({
     },
     title: {
       fontSize: 14,
-      color: '#222'
     },
     pos: {
       marginBottom: 12,
     },
-  });
+  }));
 
-const Tile = ({data}) => {
+const Tile = ({data, onSelect}) => {
     const classes = useStyles();
-
+    const { t } = useTranslation();
     return (
-      <div className={classes.root}>
-      <Card variant="outlined">
+      <div className={classes.root} onClick={() => onSelect(data)}>
+      <Card variant="outlined" className={data && data.selected? classes.selected: classes.unselected}>
         <CardContent>
-          <Typography className={classes.title} color="textSecondary" gutterBottom>
+          <Typography className={classes.title} gutterBottom>
             {data.name}
           </Typography>
           <Typography variant="h5" component="h2">
-            {data.text}
+            {data.description}
           </Typography>
-          <Typography className={classes.pos} color="textSecondary">
-            my description
+          <Typography className={classes.pos}>
+            {data.orders && data.orders.length > 0 ? t("Client Unpaid") : t("Empty Table")}
           </Typography>
           {/* <Typography variant="body2" component="p">
             well meaning and kindly.

@@ -10,14 +10,21 @@ export const CART_PAGE = 'page/cart';
 export const PAYMENT_PAGE = 'pay/payment';
 export const ORDER_PAGE = 'page/order';
 
+export const OrderStatus = {
+    New: 'N',
+    Paid: 'P',
+    Cancelled: 'C' 
+}
 
 export const PaymentStatus = {
-    NEW: 'N'
+    New: 'N',
+    Paid: 'P',
+    Cancelled: 'C'
 }
 
 export const PaymentMethod = {
-    CREDIT_CARD: 'CC',
-    WECHAT: 'W'
+    CreditCard: 'CC',
+    Wechat: 'W'
 }
 
 export const Role = {
@@ -28,8 +35,6 @@ export const Role = {
 }
 
 export const Roles = ["Super", "Admin", "Customer Service", "Driver"];
-
-
 
 export const Path = {
     Home: '/',
@@ -51,7 +56,7 @@ export const Permissions = {
     [Path.Roles]: ["Super"],
     "/roles/new": ["Super"],
     "/roles/:id": ["Super"],
-    [Path.Payments]: ["Super"],
+    [Path.Payments]: ["Super", "Admin"],
     [Path.Orders]: ["Super", "Admin"],
     [Path.Categories]: ["Super", "Admin"],
     [Path.Products]: ["Super", "Admin"],
@@ -63,4 +68,9 @@ export const Permissions = {
 export const AppMode = {
     DEV: 'dev',
     PROD: 'prod'
+}
+
+export const QrcodeTag = {
+    Dine: 'dine',
+    Takeaway: 'takeaway'
 }
