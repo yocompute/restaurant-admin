@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { AddTextButton } from "../../components/common/Button";
-// import Header from '../../components/common/Header'
 import ListTable from "../../components/table/ListTable";
 
 import {

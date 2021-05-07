@@ -1,10 +1,14 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
   FETCH_CATEGORIES,
+  FETCH_CATEGORY,
   CREATE_CATEGORY,
   UPDATE_CATEGORY,
   fetchCategoriesSuccess,
   fetchCategoriesFail,
+  fetchCategorySuccess,
+  fetchCategoryFail,
+  setCategory,
   updateCategorySuccess,
   createCategorySuccess,
 } from "./category.actions";
@@ -23,6 +27,19 @@ export function* fetchCategories(action) {
     }
   } catch (error) {
     yield put(fetchCategoriesFail(error));
+  }
+}
+
+export function* fetchCategory(action) {
+  try {
+    const {data, error, status} = yield call(CategoryApi.get, action.query);
+    if(httpSuccess(status)){
+      yield put(fetchCategorySuccess(data[0]));
+    }else{
+      yield put(setNotification(error, status));
+    }
+  } catch (error) {
+    yield put(fetchCategoryFail("error"));
   }
 }
 
@@ -58,6 +75,7 @@ export function* updateCategory(action) {
 
 export function* watchCategories() {
   yield takeLatest(FETCH_CATEGORIES, fetchCategories);
+  yield takeLatest(FETCH_CATEGORY, fetchCategory);
   yield takeLatest(CREATE_CATEGORY, createCategory);
   yield takeLatest(UPDATE_CATEGORY, updateCategory);
 }

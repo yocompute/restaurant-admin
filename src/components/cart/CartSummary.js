@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles( () => ({
   root: {
-      padding: '20px',
+      padding: '20px 0px',
   },
   summary:{
       padding: '10px 0px'
@@ -24,22 +24,23 @@ const useStyles = makeStyles( () => ({
   }
 }));
 
-const OrderSummary = ({ order }) => {
+export const CartSummary = ({ cart }) => {
   const classes = useStyles();
-  const getSummary = (order) => {
-    if(order.items && order.items.length > 0){
+  const getSummary = (cart) => {
+    if(cart.items && cart.items.length > 0){
         let subTotal = 0;
-        order.items.forEach(it => {
+        cart.items.forEach(it => {
             subTotal += it.subTotal;
         });
-        subTotal = Math.round(subTotal * 100 ) / 100;
+
+        subTotal = Math.round(subTotal * 100) / 100;
         return {subTotal, tax: (subTotal* 0.13).toFixed(2), total: (subTotal * 1.13).toFixed(2)};
     }else{
         return {subTotal:0, tax:0, total: 0};
     }
   }
 
-  const summary = getSummary(order);
+  const summary = getSummary(cart);
 
   return <div className={classes.root}>
                 {
@@ -61,5 +62,3 @@ const OrderSummary = ({ order }) => {
             }
   </div>
 }
-
-export default OrderSummary;

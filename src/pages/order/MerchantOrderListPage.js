@@ -61,7 +61,7 @@ const DEFAULT_ORDER = {
   actions: "",
 };
 
-const OrderListPage = ({
+const MerchantOrderListPage = ({
   brand,
   roles,
   orders,
@@ -162,7 +162,7 @@ const OrderListPage = ({
   );
 };
 
-OrderListPage.propTypes = {
+MerchantOrderListPage.propTypes = {
   orders: PropTypes.any,
   createOrder: PropTypes.func,
   fetchOrders: PropTypes.func,
@@ -186,4 +186,4 @@ export default connect(mapStateToProps, {
   updateOrder,
   deleteOrder,
   setOrderStatus
-})(OrderListPage);
+})(MerchantOrderListPage);

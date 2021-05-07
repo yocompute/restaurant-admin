@@ -6,7 +6,6 @@ import { Switch, Route } from 'react-router-dom';
 
 import HomePage from './pages/HomePage';
 import VerificationCodePage from './pages/auth/VerificationCodePage';
-import CreditCardPage from './pages/payment/CreditCardPage';
 import PaymentListPage from './pages/payment/PaymentListPage';
 import PaymentFormPage from './pages/payment/PaymentFormPage';
 import LoginSelectPage from './pages/auth/LoginSelectPage';
@@ -20,23 +19,27 @@ import userFormPage from './pages/user/userFormPage';
 import BrandListPage from './pages/brand/BrandListPage';
 import BrandFormPage from './pages/brand/BrandFormPage';
 import CategoryFormPage from './pages/category/CategoryFormPage';
+import OrderProductListPage from "./pages/product/OrderProductListPage";
+import OrderComboPage from "./pages/product/OrderComboPage";
 import CategoryListPage from './pages/category/CategoryListPage';
 import ProductListPage from './pages/product/ProductListPage';
 import ProductFormPage from './pages/product/ProductFormPage';
-import OrderListPage from './pages/order/OrderListPage';
-import OrderFormPage from './pages/order/OrderFormPage';
+import MerchantOrderListPage from './pages/order/MerchantOrderListPage';
+import MerchantOrderFormPage from './pages/order/MerchantOrderFormPage';
 import QrcodeListPage from './pages/qrcode/QrcodeListPage';
 import QrcodeFormPage from './pages/qrcode/QrcodeFormPage';
 import SpecListPage from './pages/spec/SpecListPage';
 import SpecFormPage from './pages/spec/SpecFormPage';
-
+import CartPage from './pages/cart/CartPage';
 import WithAuthorize from './utils/WithAuthorize';
 
 const Routes = () => {
     return (<Switch>
             <Route path="/merchants/:id" component={HomePage} />
-            <Route path="/creditcard" component={CreditCardPage} />
             <Route path="/login-select" component={LoginSelectPage} />
+            <Route path="/order-product" component={OrderProductListPage} />
+            <Route path="/cart" component={CartPage} />
+            <Route path="/combos/:id" component={OrderComboPage} />
             <Route path="/local-login" component={LocalLoginPage} />
             <Route path="/local-signup" component={LocalSignupPage} />
             <Route path="/verify-code" component={VerificationCodePage} />
@@ -56,8 +59,8 @@ const Routes = () => {
             <Route path="/qrcodes" component={QrcodeListPage} />
             <Route path="/products/:id" component={ProductFormPage} />
             <Route path="/products" component={ProductListPage} />
-            <Route path="/orders/:id" component={OrderFormPage} />
-            <Route path="/orders" component={OrderListPage} />
+            <Route path="/orders/:id" component={MerchantOrderFormPage} />
+            <Route path="/orders" component={MerchantOrderListPage} />
             <Route path="/specs/:id" component={SpecFormPage} />
             <Route path="/specs" component={SpecListPage} />
             <Route exact path="/" component={DashbordPage} />

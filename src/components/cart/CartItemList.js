@@ -1,27 +1,27 @@
-import PropTypes from "prop-types";
-import React, {useState}from 'react';
-// import { v4 as uuidv4 } from 'uuid';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import {CartItem} from './CartItem';
 
-// import './CartItemList.scss';
+const useStyles = makeStyles(() => ({
+  itemList:{
+      padding: '0px',
+      margin: '0px'
+  },
+}));
 
-export const CartItemList = ({items}) => {
+// d: IQuantityInputResult --- { item, quantity }
+export const CartItemList = ({ items, onQuantityChange, onAdditionQuantityChange }) => {
+  const classes = useStyles();
 
-    return <div className="item-list">
+  return <div className={classes.itemList}>
     {
       items && items.length > 0 &&
-      items.map(item => 
-        <div className="text-sm item-row" key={item.productId}>
-          <div className="name-col">{item.productName}</div>
-          <div className="quantity-col">x{item.quantity}</div>
-          <div className="price-col">${item.price}</div>
-        </div>
+      items.map(item => <CartItem 
+        key={item.product._id}
+        item={item} 
+        onQuantityChange={d => onQuantityChange(d)}
+        onAdditionQuantityChange={d => onAdditionQuantityChange(d)}/>
       )
     }
-    </div>
-}
-CartItemList.propTypes = {
-  items: PropTypes.shape({
-    length: PropTypes.number,
-    map: PropTypes.func
-  })
+  </div>
 }

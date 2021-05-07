@@ -50,7 +50,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function OrderFormPage({
+function MerchantOrderFormPage({
   roles,
   users,
   qrcodes,
@@ -325,7 +325,7 @@ function OrderFormPage({
   );
 }
 
-OrderFormPage.propTypes = {
+MerchantOrderFormPage.propTypes = {
   order: PropTypes.shape({
     _id: PropTypes.any,
     description: PropTypes.any,
@@ -365,4 +365,4 @@ export default connect(mapStateToProps, {
   createOrder,
   updateOrder,
   fetchProducts,
-})(OrderFormPage);
+})(MerchantOrderFormPage);

@@ -23,6 +23,7 @@ const theme = createMuiTheme({
     status: {
       danger: purple[500],
     },
+    spacing: 8
     // spacing: {
     //     field: 3,
     // }

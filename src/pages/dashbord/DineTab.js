@@ -1,13 +1,20 @@
 import React, { useEffect } from 'react';
-
+import { useHistory } from "react-router-dom";
 // import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // import PropTypes from "prop-types";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 
 import Tile from './tile';
+
+import { 
+    AddTextButton,
+    RemoveTextButton,
+    PrintTextButton
+} from "../../components/common/Button";
 
 import {
     fetchQrcodes,
@@ -20,18 +27,22 @@ import { selectAuthRoles } from "../../redux/auth/auth.selectors";
 import { selectUnpaidPaymentsByQrcode } from "../../redux/payment/payment.selectors";
 import { selectUnpaidQrcodeOrdersByTag, selectUnpaidOrdersByQrcode } from "../../redux/order/order.selectors";
 import { fetchPayments, updatePayment } from "../../redux/payment/payment.actions";
-import { Role } from "../../const";
+import { setCart, updateCartItemQuantity, updateSelectedAddition } from '../../redux/cart/cart.actions';
 import { PaymentStatus } from "../../const";
-import OrderItems from "../../components/order/OrderItems";
-import { OrderSummary } from '../../components/order/OrderSummary';
-
+// import { CartItemList} from "../../components/cart/CartItemList";
+import OrderItems from '../../components/order/OrderItems';
+import OrderSummary from '../../components/order/OrderSummary';
 import OrderPrint from "../../components/order/OrderPrint";
-
 
 const useStyles = makeStyles({
     tileRow: {
         display: 'flex',
         flexWrap: "wrap"
+    },
+    row: {
+        width: "100%",
+        paddingBottom: "5px",
+        display: "flex"
     },
     tile:{
         width: "25%"
@@ -71,11 +82,12 @@ const useStyles = makeStyles({
     },
     printBtn: {
         marginLeft: "10px"
-    }
+    },
 });
 
 const DineTab = ({
     brand,
+    qrcode,
     setQrcode,
     fetchPayments,
     updatePayment,
@@ -85,19 +97,15 @@ const DineTab = ({
     payments,
     orders,
     orderMap,
+    setCart,
+    updateCartItemQuantity,
+    updateSelectedAddition
 }) => {
 
     const classes = useStyles();
-    // const history = useHistory();
-
-    // const bull = <span className={classes.bullet}>•</span>;
-
+    const history = useHistory();
     const [checked, setChecked] = React.useState(true);
 
-    // const handleChangeCheckbox = (event) => {
-    //   setChecked(event.target.checked);
-    // };
-    // const [value, setValue] = React.useState('female');
 
     const handleClick = (qrcode) => {
         if (qrcode) {
@@ -110,7 +118,7 @@ const DineTab = ({
             })
             fetchQrcodesSuccess(qrcodes);
             setQrcode(qrcode);
-            // fetchPayments({qrcode: qrcode._id, status: PaymentStatus.New});
+            // fetchPayments({qrcode: qrcode._id, status: PaymentStatus.NEW});
         }
     }
 
@@ -122,37 +130,72 @@ const DineTab = ({
         window.print();
     }
 
+    // d: IQuantityInputResult --- CartItem: { item, quantity }
+    const handleQuantityChange = (d) => {
+        updateCartItemQuantity(d._id, d.quantity);
+    }
+
+    // d: IQuantityInputResult --- AdditionItem: { item, quantity }
+    const handleAdditionQuantityChange = (d) => {
+        updateSelectedAddition(d._id, d.item, d.quantity);
+    }
+
+    const handleAddProduct = () => {
+        history.push('/order-product');    
+    }
+
     qrcodes &&
     qrcodes.forEach(tile => {
         tile.orders = orderMap[tile._id].orders;
     })
-
+    if(payments && payments.length>0){
+        setCart(payments[0].items);
+    }
     return (
         <div>
             <div className={classes.tileRow}>
                 {
                     qrcodes &&
                     qrcodes.map(tile => (
-                        <div className={classes.tile} >
+                        <div className={classes.tile} key={tile._id}>
                             <Tile key={tile.name} data={tile} onSelect={handleClick} />
                         </div>
                     ))
                 }
             </div>
+            {
+                qrcode && qrcode._id &&
+                <div className={classes.row}>
+                    <Box mr={1}>
+                        <AddTextButton variant="outlined" text="Add Dishes" onClick={handleAddProduct}/>
+                    </Box>
+                    <Box mr={1}>
+                        <RemoveTextButton variant="outlined" text="Remove Dishes"/>
+                    </Box>
+                    <Box mr={1}>
+                        <PrintTextButton variant="outlined" text="Print"/>
+                    </Box>
+                </div>
+            }
             <div className={classes.payments}>
                 {
                     payments &&
                     payments.map(payment => (
                         <div className={classes.payment} key={payment._id} >
-                            <div className={classes.status}>Status: {payment.status === PaymentStatus.New ? 'Not Paid' : 'Paid'}</div>
+
+                            <div className={classes.status}>Status: {payment.status === PaymentStatus.NEW ? 'Not Paid' : 'Paid'}</div>
                             <OrderItems items={payment.items} />
+
                             <OrderSummary order={payment} />
-                            <div className={classes.buttonRow}>
-                                <Button variant="contained" color="primary" onClick={() => handlePay(payment)}>Set as Paid</Button>
-                                <Button variant="contained" color="primary" onClick={handlePrint} className={classes.printBtn}>
-                                    Print
-                                </Button>
-                            </div>
+
+                                <div className={classes.buttonRow}>
+                                    <Button variant="outlined" color="primary" onClick={() => handlePay(payment)}>
+                                        Set as Paid
+                                    </Button>
+                                    <Button variant="outlined" color="primary" onClick={handlePrint} className={classes.printBtn}>
+                                        Print
+                                    </Button>
+                                </div>
                         </div>
                     ))
                 }
@@ -169,6 +212,7 @@ const mapStateToProps = state => ({
     roles: selectAuthRoles(state),
     brand: state.brand,
     qrcodes: selectQrcodesByType(state),
+    qrcode: state.qrcode,
     payments: selectUnpaidPaymentsByQrcode(state),
     orders: selectUnpaidOrdersByQrcode(state),
     orderMap: selectUnpaidQrcodeOrdersByTag(state)
@@ -181,6 +225,9 @@ export default connect(
         setQrcode,
         fetchPayments,
         updatePayment,
-        fetchQrcodesSuccess
+        fetchQrcodesSuccess,
+        setCart,
+        updateCartItemQuantity,
+        updateSelectedAddition
     }
 )(DineTab);

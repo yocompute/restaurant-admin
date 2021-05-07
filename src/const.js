@@ -34,6 +34,12 @@ export const Role = {
     Driver: "Driver"
 }
 
+export const ProductType = {
+    Combo: "C",
+    Single: "S",
+    Addition: "A"
+}
+
 export const Roles = ["Super", "Admin", "Customer Service", "Driver"];
 
 export const Path = {

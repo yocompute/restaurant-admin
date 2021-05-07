@@ -89,7 +89,7 @@ const OrderItems = ({items}) => {
             items.map(item =>
                 {
                     return item.quantity > 0 &&
-                    <div className={classes.cartItem} key={item.refId}>
+                    <div className={classes.cartItem} key={item._id}>
                     <div className={classes.productRow}>
                         <div className={classes.productNameCol}>{item.product.name}</div>
                         <div className={classes.quantityCol}>x{item.quantity}</div>

@@ -6,6 +6,9 @@ export const selectProduct = (state) => state.product;
 export const selectAllAdditions = (state) => state.additions;
 export const selectProducts = (state) => state.products;
 
+export const selectCombo = (state) => state.combo;
+export const selectComboAdditions = createSelector([selectCombo], (combo) => combo.additions);
+
 export const selectCategoryMap = createSelector([selectProducts], (products) => {
     const categoryMap = {};
   

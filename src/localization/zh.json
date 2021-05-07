@@ -26,9 +26,17 @@
         "Empty Table": "空桌",
 
         "Add": "添加",
-
+        "Delete": "删除",
+        "Print": "打印",
+        "Add Dishes": "加菜",
+        "Remove Dishes": "減菜",
+        "Choose Spec": "選規格",
+        
         "New": "新建",
         "Paid": "已付款",
-        "Cancelled": "已取消"
+        "Cancelled": "已取消",
+
+        "Additions": "配菜",
+        "Checkout": "下單"
     }
 }
