@@ -15,7 +15,7 @@ i18n
         zh
     },
     /* default language when load the website in browser */
-    lng: "zh",
+    lng: "en",
     /* When react i18next not finding any language to as default in borwser */
     fallbackLng: "en",
     /* debugger For Development environment */

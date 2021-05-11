@@ -6,17 +6,20 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import Box from "@material-ui/core/Box";
 
-import OrderProductList from "../../components/product/OrderProductList";
+import ProductSelectList from "../../components/product/ProductSelectList";
 import CategoryTabs from "../../components/category/CategoryTabs";
 import CartEditor from "../../components/cart/CartEditor";
 
 import { fetchProducts } from "../../redux/product/product.actions";
 import { setCategory } from "../../redux/category/category.actions";
 import { createOrder } from "../../redux/order/order.actions";
+import { createPayment } from "../../redux/payment/payment.actions";
+
 import { selectCategoryMap } from "../../redux/product/product.selectors";
 import { selectQuantity } from "../../redux/cart/cart.selectors";
 import { selectAuthUser } from "../../redux/auth/auth.selectors";
-import { OrderStatus } from "../../const";
+import { selectUnpaidPaymentByQrcode } from "../../redux/payment/payment.selectors";
+import { OrderStatus, PaymentStatus } from "../../const";
 import { useTranslation } from "react-i18next";
 // import { useHistory } from "react-router";
 
@@ -43,14 +46,16 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const OrderProductListPage = ({
+const ProductSelectListPage = ({
   user,
   qrcode,
   brand,
   cart,
+  payment,
   categoryMap,
   fetchProducts,
   setCategory,
+  createPayment,
   createOrder,
 }) => {
   const classes = useStyles();
@@ -90,31 +95,24 @@ const OrderProductListPage = ({
       const additions = [];
       if (it.additions && it.additions.length > 0) {
         it.additions.forEach(addition => {
-          additions.push({
+          const a ={
+            ...addition,
+            ...addition.product,
             product: addition.product._id,
-            name: addition.product.name,
-            price: addition.product.price,
-            cost: addition.product.cost,
-            saleTaxRate: addition.product.saleTaxRate,
-            purchaseTaxRate: addition.product.purchaseTaxRate,
-            quantity: addition.quantity
-          });
+          };
+          delete a._id;
+          additions.push(a);
         })
       }
 
+      // rely on clean redux
       p.items.push({
-        // refId: it.refId,
+        ...it,
         product: it.product._id,
-        price: it.product.price,
-        cost: it.product.cost,
-        saleTaxRate: it.product.saleTaxRate,
-        purchaseTaxRate: it.product.purchaseTaxRate,
         brand: it.product.brand._id,
         additions,
-        quantity: it.quantity,
-        subTotal: it.subTotal,
-        saleTax: it.saleTax,
       });
+
       p.subTotal += it.subTotal;
       p.saleTax += it.saleTax;
     });
@@ -126,9 +124,26 @@ const OrderProductListPage = ({
   }
 
   const handleCheckout = () => {
-    // history.push('/cart');
-    const order = toOrder(cart);
-    createOrder(order);
+    if(!user || !qrcode){
+      return;
+    }else{
+      const order = toOrder(cart);
+      if(!payment){
+        const p = {
+          orders: [order],
+          user: user._id,
+          qrcode: qrcode._id,
+          status: PaymentStatus.New,
+          note: '',
+          subTotal: order.subTotal,
+          saleTax: order.saleTax,
+          total: order.total
+        }
+        createPayment(p);
+      }else{
+        createOrder({...order, payment: payment._id});
+      }
+    }
   }
 
   return (
@@ -145,7 +160,7 @@ const OrderProductListPage = ({
               />
             </div>
             <div className={classes.products}>
-              <OrderProductList data={categoryMap} />
+              <ProductSelectList data={categoryMap} />
             </div>
           </Card>
         </Box>
@@ -163,7 +178,7 @@ const OrderProductListPage = ({
   );
 };
 
-OrderProductListPage.propTypes = {
+ProductSelectListPage.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,
@@ -178,14 +193,16 @@ const mapStateToProps = (state) => ({
   qrcode: state.qrcode,
   brand: state.brand,
   cart: state.cart,
+  products: state.products,
   user: selectAuthUser(state),
   categoryMap: selectCategoryMap(state),
   nProducts: selectQuantity(state),
-  products: state.products,
+  payment: selectUnpaidPaymentByQrcode(state),
 });
 
 export default connect(mapStateToProps, {
   fetchProducts,
   setCategory,
+  createPayment,
   createOrder
-})(OrderProductListPage);
+})(ProductSelectListPage);

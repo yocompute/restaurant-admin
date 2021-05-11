@@ -19,8 +19,8 @@ import userFormPage from './pages/user/userFormPage';
 import BrandListPage from './pages/brand/BrandListPage';
 import BrandFormPage from './pages/brand/BrandFormPage';
 import CategoryFormPage from './pages/category/CategoryFormPage';
-import OrderProductListPage from "./pages/product/OrderProductListPage";
-import OrderComboPage from "./pages/product/OrderComboPage";
+import ProductSelectListPage from "./pages/product/ProductSelectListPage";
+import ComboSelectPage from "./pages/product/ComboSelectPage";
 import CategoryListPage from './pages/category/CategoryListPage';
 import ProductListPage from './pages/product/ProductListPage';
 import ProductFormPage from './pages/product/ProductFormPage';
@@ -37,9 +37,9 @@ const Routes = () => {
     return (<Switch>
             <Route path="/merchants/:id" component={HomePage} />
             <Route path="/login-select" component={LoginSelectPage} />
-            <Route path="/order-product" component={OrderProductListPage} />
+            <Route path="/order-product" component={ProductSelectListPage} />
             <Route path="/cart" component={CartPage} />
-            <Route path="/combos/:id" component={OrderComboPage} />
+            <Route path="/combos/:id" component={ComboSelectPage} />
             <Route path="/local-login" component={LocalLoginPage} />
             <Route path="/local-signup" component={LocalSignupPage} />
             <Route path="/verify-code" component={VerificationCodePage} />

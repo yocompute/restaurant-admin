@@ -6,10 +6,10 @@ import './OrderPrint.css';
 
 const OrderPrint = ({ order }) => {
     return <div className="section-to-print">
-        <div className="center">{order.brand.name}</div>
+        {/* <div className="center">{order.brand.name}</div>
         <div className="center">{order.brand.street}, {order.brand.city}</div>
         <div className="center">{order.brand.phoneNumber}</div>
-        <div className="center">HST {order.brand.taxNumber}</div>
+        <div className="center">HST {order.brand.taxNumber}</div> */}
         <div className="center">------------------------------</div>
         <div className="center">{order.qrcode ? order.qrcode.name : ''} {order.qrcode ? order.qrcode.tag : ''}</div>
         <div className="center">{toDateTimeString(order.createUTC ? order.createUTC : new Date().toISOString())}</div>

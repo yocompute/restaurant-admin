@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useHistory } from "react-router-dom";
-// import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import PropTypes from "prop-types";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";
@@ -10,7 +8,7 @@ import Box from "@material-ui/core/Box";
 
 import Tile from './tile';
 
-import { 
+import {
     AddTextButton,
     RemoveTextButton,
     PrintTextButton
@@ -24,12 +22,12 @@ import {
 
 import { selectQrcodesByType } from "../../redux/qrcode/qrcode.selectors";
 import { selectAuthRoles } from "../../redux/auth/auth.selectors";
-import { selectUnpaidPaymentsByQrcode } from "../../redux/payment/payment.selectors";
+import { selectUnpaidPaymentByQrcode } from "../../redux/payment/payment.selectors";
 import { selectUnpaidQrcodeOrdersByTag, selectUnpaidOrdersByQrcode } from "../../redux/order/order.selectors";
 import { fetchPayments, updatePayment } from "../../redux/payment/payment.actions";
-import { setCart, updateCartItemQuantity, updateSelectedAddition } from '../../redux/cart/cart.actions';
+import { clearCart, updateCartItemQuantity, updateSelectedAddition } from '../../redux/cart/cart.actions';
 import { PaymentStatus } from "../../const";
-// import { CartItemList} from "../../components/cart/CartItemList";
+
 import OrderItems from '../../components/order/OrderItems';
 import OrderSummary from '../../components/order/OrderSummary';
 import OrderPrint from "../../components/order/OrderPrint";
@@ -44,7 +42,7 @@ const useStyles = makeStyles({
         paddingBottom: "5px",
         display: "flex"
     },
-    tile:{
+    tile: {
         width: "25%"
     },
     root: {
@@ -94,10 +92,10 @@ const DineTab = ({
     fetchQrcodesSuccess,
     qrcodes,
     roles,
-    payments,
+    payment,
     orders,
     orderMap,
-    setCart,
+    clearCart,
     updateCartItemQuantity,
     updateSelectedAddition
 }) => {
@@ -107,17 +105,18 @@ const DineTab = ({
     const [checked, setChecked] = React.useState(true);
 
 
-    const handleClick = (qrcode) => {
+    const handleClickQrcode = (qrcode) => {
         if (qrcode) {
             qrcodes.forEach(q => {
-                if(q._id === qrcode._id){
+                if (q._id === qrcode._id) {
                     q.selected = true;
-                }else{
+                } else {
                     q.selected = false;
                 }
             })
             fetchQrcodesSuccess(qrcodes);
             setQrcode(qrcode);
+            clearCart();
             // fetchPayments({qrcode: qrcode._id, status: PaymentStatus.NEW});
         }
     }
@@ -125,7 +124,7 @@ const DineTab = ({
     const handlePay = (payment) => {
         updatePayment({ status: PaymentStatus.Paid }, payment._id);
     }
-    
+
     const handlePrint = () => {
         window.print();
     }
@@ -141,16 +140,28 @@ const DineTab = ({
     }
 
     const handleAddProduct = () => {
-        history.push('/order-product');    
+        history.push('/order-product');
     }
 
     qrcodes &&
     qrcodes.forEach(tile => {
         tile.orders = orderMap[tile._id].orders;
     })
-    if(payments && payments.length>0){
-        setCart(payments[0].items);
-    }
+
+    // const toCartItems = (items) => {
+    //     const its = [];
+    //     items.forEach(it => {
+    //         const additions = it.additions;
+    //         const a = [];
+    //         additions.forEach(addition => {
+    //             const prod = addition.product;
+    //             a.push({ ...addition, ...prod })
+    //         });
+    //         its.push({...it, additions: a});
+    //     });
+    //     return its;
+    // }
+
     return (
         <div>
             <div className={classes.tileRow}>
@@ -158,7 +169,7 @@ const DineTab = ({
                     qrcodes &&
                     qrcodes.map(tile => (
                         <div className={classes.tile} key={tile._id}>
-                            <Tile key={tile.name} data={tile} onSelect={handleClick} />
+                            <Tile key={tile.name} data={tile} onSelect={handleClickQrcode} />
                         </div>
                     ))
                 }
@@ -167,39 +178,42 @@ const DineTab = ({
                 qrcode && qrcode._id &&
                 <div className={classes.row}>
                     <Box mr={1}>
-                        <AddTextButton variant="outlined" text="Add Dishes" onClick={handleAddProduct}/>
+                        <AddTextButton variant="outlined" text="Add Dishes" onClick={handleAddProduct} />
                     </Box>
                     <Box mr={1}>
-                        <RemoveTextButton variant="outlined" text="Remove Dishes"/>
+                        <RemoveTextButton variant="outlined" text="Remove Dishes" />
                     </Box>
                     <Box mr={1}>
-                        <PrintTextButton variant="outlined" text="Print"/>
+                        <PrintTextButton variant="outlined" text="Print" />
                     </Box>
                 </div>
             }
-            <div className={classes.payments}>
-                {
-                    payments &&
-                    payments.map(payment => (
-                        <div className={classes.payment} key={payment._id} >
+            {
+                payment &&
+                <div className={classes.payment} key={payment._id} >
 
-                            <div className={classes.status}>Status: {payment.status === PaymentStatus.NEW ? 'Not Paid' : 'Paid'}</div>
-                            <OrderItems items={payment.items} />
+                    <div className={classes.status}>Status: {payment.status === PaymentStatus.NEW ? 'Not Paid' : 'Paid'}</div>
+                    {
+                        payment.orders.map(order => (
+                            <div key={order._id}>
+                                <OrderItems items={order.items} />
+                                <OrderSummary order={order} />
+                            </div>
+                            )
+                        )
+                    }
 
-                            <OrderSummary order={payment} />
+                    <div className={classes.buttonRow}>
+                        <Button variant="outlined" color="primary" onClick={() => handlePay(payment)}>
+                            Set as Paid
+                        </Button>
+                        <Button variant="outlined" color="primary" onClick={handlePrint} className={classes.printBtn}>
+                            Print
+                        </Button>
+                    </div>
+                </div>
+            }
 
-                                <div className={classes.buttonRow}>
-                                    <Button variant="outlined" color="primary" onClick={() => handlePay(payment)}>
-                                        Set as Paid
-                                    </Button>
-                                    <Button variant="outlined" color="primary" onClick={handlePrint} className={classes.printBtn}>
-                                        Print
-                                    </Button>
-                                </div>
-                        </div>
-                    ))
-                }
-            </div>
             {
                 orders && orders.length > 0 &&
                 <OrderPrint order={orders[0]} />
@@ -213,7 +227,7 @@ const mapStateToProps = state => ({
     brand: state.brand,
     qrcodes: selectQrcodesByType(state),
     qrcode: state.qrcode,
-    payments: selectUnpaidPaymentsByQrcode(state),
+    payment: selectUnpaidPaymentByQrcode(state),
     orders: selectUnpaidOrdersByQrcode(state),
     orderMap: selectUnpaidQrcodeOrdersByTag(state)
 });
@@ -226,7 +240,7 @@ export default connect(
         fetchPayments,
         updatePayment,
         fetchQrcodesSuccess,
-        setCart,
+        clearCart,
         updateCartItemQuantity,
         updateSelectedAddition
     }

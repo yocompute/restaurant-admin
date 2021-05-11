@@ -11,13 +11,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import AppBar from '@material-ui/core/AppBar';
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 
 import { logout } from '../redux/auth/auth.actions';
 
 import { selectAuthUser, selectTokenId } from '../redux/auth/auth.selectors';
+import UserMenu from './UserMenu';
+import LanguageMenu from './LanguageMenu';
+import { useTranslation } from 'react-i18next';
 
 const drawerWidth = 240;
 
@@ -53,8 +53,6 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    height: '100vh',
-    overflow: 'auto',
   },
   container: {
     padding: theme.spacing(4),
@@ -79,19 +77,28 @@ const useStyles = makeStyles((theme) => ({
     order: 2,
     float: 'right',
   },
-  user:{
+  lang:{
+    float: 'right',
+  },
+  userMenu:{
     float: 'right'
   }
 }));
 
+const menus = [
+  {name: 'logout', text: 'Logout'}
+]
+const languageMenus = [
+  {name: 'en', text: 'English'},
+  {name: 'zh', text: '中文'}
+]
 const Header = ({
   isLoggedIn, user, logout, sidebarExpanded, onToggle,
 }) => {
   const classes = useStyles();
+  const {i18n} = useTranslation();
   // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   // const [sidebarExpanded, setSidebarExpanded] = useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
   const handleExpand = () => {
     onToggle(true);
   };
@@ -100,18 +107,16 @@ const Header = ({
   //   // setAuth(event.target.checked);
   // };
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleSelect = (menu) => {
+    if(menu.name === 'logout'){
+      logout();
+    }
+  }
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleLanguageSelect = (menu) => {
+    i18n.changeLanguage(menu.name);
+  }
 
-  const handleLogout = () => {
-    logout();
-    setAnchorEl(null);
-  };
   return (
     <AppBar
       position="absolute"
@@ -131,35 +136,13 @@ const Header = ({
         {isLoggedIn
           ? (
             <div className={classes.iconButton}>
-              <div className={classes.user}>{user ? user.username: ''}</div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              </Menu>
+              <div className={classes.lang}>
+              <LanguageMenu  menus={languageMenus} onSelect={handleLanguageSelect} />
+              </div>
+              <div className={classes.userMenu}>
+              <UserMenu  user={user} menus={menus} onSelect={handleSelect}/>
+              </div>
+
             </div>
           )
           : <Redirect to="local-login" />}

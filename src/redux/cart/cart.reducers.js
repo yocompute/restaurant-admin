@@ -6,18 +6,36 @@ import {
   UPDATE_SELECTED_ADDITION
 } from './cart.actions';
 
-import { getSummary } from "../../utils";
-import { ProductType } from "../../const";
+import {
+  getOrderSummary,
+  getCartItemSummary,
+  getCartItemIndex,
+  removeCartItem,
+} from "../../utils";
+
+import { OrderStatus, ProductType } from "../../const";
 
 export const DEFAULT_CART = {
   items: [],
+  status: OrderStatus.New,
+  user: null,
+  qrcode: null,
+  payment: null,
+  note: '',
   subTotal: 0,
+  saleTax: 0,
+  total: 0
 }
 
 /**
  * item: ICartItem = {
  *  _id: string,
+ *  type: string,
  *  product,
+ *  price,
+ *  cost,
+ *  saleTaxRate,
+ *  purchaseTaxRate,
  *  addtions: [{ addition, quantity }]
  *  quantity: number,
  *  subTotal: number
@@ -25,7 +43,7 @@ export const DEFAULT_CART = {
  */
 export const cartReducer = (state = DEFAULT_CART, action) => {
   switch (action.type) {
-    case SET_CART:
+    case SET_CART: // fix me !
       return { items: action.items }
     case CLEAR_CART:
       return DEFAULT_CART;
@@ -35,61 +53,41 @@ export const cartReducer = (state = DEFAULT_CART, action) => {
       const item = action.item;
 
       if (item && item.quantity !== 0) {
-        const index = state.items.findIndex(it => {
-          if (it.product.type === ProductType.Single) {
-            return it.product._id === item.product._id;
-          } else {
-            return it.comboId === item.comboId;
-          }
-        });
+        const index = getCartItemIndex(state.items, item);
+        const itemSummary = getCartItemSummary(item);
         const newItems = [...state.items];
-        const summary = getSummary(item);
         if (index !== -1) {
-          newItems[index] = { ...item, ...summary };
+          newItems[index] = { ...item, ...itemSummary };
           return { ...state, items: newItems };
         } else {
-          newItems.push({ ...item, ...summary });
+          newItems.push({ ...item, ...itemSummary });
         }
-        return { ...state, items: newItems };
+
+        const orderSummary = getOrderSummary({ ...state, items: newItems });
+        return { ...state, ...orderSummary, items: newItems };
       } else {
-        // delete item
-        const items = state.items.filter(it => {
-          if (it.product.type === ProductType.Single) {
-            return it.product._id !== item.product._id;
-          } else {
-            return it.comboId !== item.comboId;
-          }
-        });
-        return { ...state, items };
+        const items = removeCartItem(state.items, item);
+        const orderSummary = getOrderSummary({ ...state, items });
+        return { ...state, ...orderSummary, items };
       }
 
     case UPDATE_CART_ITEM_QUANTITY:
       const quantity = action.quantity;
       if (quantity === 0) {
         const product = action.product;
-        const items = state.items.filter(it => {
-          if (it.product.type === ProductType.Single) {
-            return it.product._id !== product._id;
-          } else {
-            return it.comboId !== action.comboId;
-          }
-        });
-        return { ...state, items };
+        const items = removeCartItem(state.items, {product, comboId: action.comboId});
+        const orderSummary = getOrderSummary({ ...state, items });
+        return { ...state, ...orderSummary, items };
       } else {
         const product = action.product;
-        const index = state.items.findIndex(it => {
-          if (it.product.type === ProductType.Single) {
-            return it.product._id === product._id;
-          } else {
-            return it.comboId === action.comboId;
-          }
-        });
+        const index = getCartItemIndex(state.items, {product, comboId: action.comboId});
         if (index !== -1) {
           const newItems = [...state.items];
           const newItem = { ...state.items[index], quantity };
-          const summary = getSummary(newItem);
-          newItems[index] = { ...newItem, ...summary };
-          return { ...state, items: newItems };
+          const itemSummary = getCartItemSummary(newItem);
+          newItems[index] = { ...newItem, ...itemSummary };
+          const orderSummary = getOrderSummary({ ...state, items: newItems });
+          return { ...state, ...orderSummary, items: newItems };
         } else {
           // pass, should never happen
         }
@@ -99,31 +97,33 @@ export const cartReducer = (state = DEFAULT_CART, action) => {
     case UPDATE_SELECTED_ADDITION:
       const index = state.items.findIndex(it => it.comboId === action.comboId);
       if (index !== -1) {
-        const item = state.items[index];
-        const additions = [...item.additions];
         const quantity = action.quantity;
         const addition = action.addition;
+        const combo = state.items[index];
+        const additions = [...combo.additions];
         const newItems = [...state.items];
 
         if (quantity === 0) {
-          const newItem = {
-            ...item,
+          const newCombo = {
+            ...combo,
             additions: additions.filter(it => it.product._id !== addition._id)
           };
-          const summary = getSummary(newItem);
-          newItems[index] = { ...newItem, ...summary };
-          return { ...state, items: newItems };
+          const itemSummary = getCartItemSummary(newCombo);
+          newItems[index] = { ...newCombo, ...itemSummary };
+          const orderSummary = getOrderSummary({ ...state, items: newItems });
+          return { ...state, ...orderSummary, items: newItems };
         } else {
           const additionIndex = additions.findIndex(it => it.product._id === addition._id);
           if (additionIndex !== -1) {
             additions[additionIndex] = { product: addition, quantity };
-            const newItem = {
-              ...item,
+            const newCombo = {
+              ...combo,
               additions,
             }
-            const summary = getSummary(newItem);
-            newItems[index] = { ...newItem, ...summary };
-            return { ...state, items: newItems };
+            const itemSummary = getCartItemSummary(newCombo);
+            newItems[index] = { ...newCombo, ...itemSummary };
+            const orderSummary = getOrderSummary({ ...state, items: newItems });
+            return { ...state, ...orderSummary, items: newItems };
           } else {
             // should not happen
             // return {
@@ -133,6 +133,8 @@ export const cartReducer = (state = DEFAULT_CART, action) => {
             // }
           }
         }
+      } else {
+        // pass
       }
   }
 

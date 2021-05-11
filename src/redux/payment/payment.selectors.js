@@ -26,3 +26,12 @@ export const selectUnpaidPaymentsByQrcode = createSelector([selectPayments, sele
         return [];
     }
 });
+
+export const selectUnpaidPaymentByQrcode = createSelector([selectPayments, selectQrcode], (payments, qrcode) => {
+    if(payments){
+        const ps = payments.filter(p => p.qrcode && qrcode && p.qrcode._id === qrcode._id && p.status !== PaymentStatus.Paid);
+        return (ps && ps.length > 0) ? ps[0] : null;
+    }else{
+        return null;
+    }
+});

@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { AddTextButton } from '../../components/common/Button';
 import { updateCartItem } from '../../redux/cart/cart.actions';
-import OrderAdditions from "../../components/product/OrderAdditions";
+import AdditionSelectList from "../../components/product/AdditionSelectList";
 
 import { selectProductQuantity } from '../../redux/cart/cart.selectors';
 import { useHistory } from 'react-router';
@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-const OrderComboPage = ({product, combo, updateCartItem}) => {
+const ComboSelectPage = ({product, combo, updateCartItem}) => {
     const classes = useStyles();
     const history = useHistory();
 
@@ -62,7 +62,7 @@ const OrderComboPage = ({product, combo, updateCartItem}) => {
                     <div className={classes.row}>
                         {
                             product && product.additions && product.additions.length > 0 &&
-                            <OrderAdditions additions={product.additions}/>
+                            <AdditionSelectList additions={product.additions}/>
                         }
                     </div>
                 </div>
@@ -72,7 +72,7 @@ const OrderComboPage = ({product, combo, updateCartItem}) => {
     )
 }
 
-OrderComboPage.propTypes = {
+ComboSelectPage.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             id: PropTypes.string
@@ -92,4 +92,4 @@ const mapStateToProps = state => ({
 export default connect(
     mapStateToProps,
     {updateCartItem}
-)(OrderComboPage);
+)(ComboSelectPage);

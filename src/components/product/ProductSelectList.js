@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 import { makeStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 
@@ -8,6 +9,7 @@ import { AddTextButton } from "../common/Button";
 import { updateCartItem } from "../../redux/cart/cart.actions";
 import { setProduct, setCombo } from "../../redux/product/product.actions";
 import { useTranslation } from "react-i18next";
+import { ProductType } from "../../const";
 
 
 const useStyles = makeStyles(() => ({
@@ -48,17 +50,26 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const OrderProductList = ({ data, cart, updateCartItem, setProduct, setCombo }) => {
+const ProductSelectList = ({ data, cart, updateCartItem, setProduct, setCombo }) => {
     const classes = useStyles();
     const history = useHistory();
     const {t} = useTranslation();
 
+    // combo --- ICartItem
     function handleSelect(product) {
         setProduct(product);
         setCombo({
-            refId: product._id,
+            comboId: uuidv4(),
+            type: ProductType.Combo,
             product,
-            additions: []
+            additions: [],
+            price: product.price,
+            cost: product.cost,
+            saleTaxRate: product.saleTaxRate,
+            purchaseTaxRate: product.purchaseTaxRate,
+            subTotal:0,
+            saleTax: 0,
+            quantity: 0,
         });
 
         history.push(`/combos/${product._id}`);
@@ -136,4 +147,4 @@ export default connect(mapStateToProps,
         updateCartItem,
         setProduct,
         setCombo
-    })(OrderProductList);
+    })(ProductSelectList);

@@ -1,65 +1,72 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { getOrderSummary } from '../../utils';
 
-const useStyles = makeStyles( () => ({
-  root: {
-      padding: '20px',
-  },
-  summary:{
-      padding: '10px 0px'
-  },
-  summaryRow:{
-      width: '100%',
-      height: '22px',
-  },
-  nameCol:{
-      float: 'left',
-      width: 'calc(100% - 100px)',
-      // padding: '0px 30px'
-  },
-  priceCol:{
-      float: 'left',
-      width: '100px',
-      // padding: '0px 50px'
-  }
+const useStyles = makeStyles(() => ({
+    root: {
+        padding: '20px',
+    },
+    summary: {
+        padding: '10px 0px'
+    },
+    summaryRow: {
+        width: '100%',
+        height: '22px',
+    },
+    nameCol: {
+        float: 'left',
+        width: 'calc(100% - 100px)',
+    },
+    amountCol: {
+        float: 'left',
+        width: '100px',
+    }
 }));
 
+// interface IOrder  {
+//     items: IOrderItem[],
+//     note: string,
+//     subTotal: number,
+//     saleTax: number,
+//     total: number,
+//     status: string,
+//     // brand: IBrand,
+//     user: IUser,
+//     qrcode: IQrcode,
+//     payment: IPayment,
+//     createUTC: Date,
+//     updateUTC?: Date,
+// }
+
+/**
+ * 
+ * @param {*} order IOrder 
+ * @returns 
+ */
 const OrderSummary = ({ order }) => {
-  const classes = useStyles();
-  const getSummary = (order) => {
-    if(order.items && order.items.length > 0){
-        let subTotal = 0;
-        order.items.forEach(it => {
-            subTotal += it.subTotal;
-        });
-        subTotal = Math.round(subTotal * 100 ) / 100;
-        return {subTotal, tax: (subTotal* 0.13).toFixed(2), total: (subTotal * 1.13).toFixed(2)};
-    }else{
-        return {subTotal:0, tax:0, total: 0};
-    }
-  }
+    const classes = useStyles();
 
-  const summary = getSummary(order);
+    const summary = getOrderSummary(order);
 
-  return <div className={classes.root}>
-                {
-                summary && summary.subTotal !== 0 &&
-                <div className={classes.summary}>
-                    <div className={classes.summaryRow}>
-                        <div className={classes.nameCol}>Subtotal</div>
-                        <div className={classes.priceCol}>${summary.subTotal}</div>
-                    </div>
-                    <div className={classes.summaryRow}>
-                        <div className={classes.nameCol}>Tax</div>
-                        <div className={classes.priceCol}>${summary.tax}</div>
-                    </div>
-                    <div className={classes.summaryRow}>
-                        <div className={classes.nameCol}>Total</div>
-                        <div className={classes.priceCol}>${summary.total}</div>
-                    </div>
+    return <div className={classes.root}>
+        {
+            summary && summary.subTotal !== 0 &&
+            <div className={classes.summary}>
+                <div className={classes.summaryRow}>
+                    <div className={classes.nameCol}>Subtotal</div>
+                    <div className={classes.amountCol}>${summary.subTotal}</div>
                 </div>
-            }
-  </div>
+                <div className={classes.summaryRow}>
+                    <div className={classes.nameCol}>Tax</div>
+                    <div className={classes.amountCol}>${summary.saleTax}</div>
+                </div>
+                <div className={classes.summaryRow}>
+                    <div className={classes.nameCol}>Total</div>
+                    <div className={classes.amountCol}>${summary.total}</div>
+                </div>
+            </div>
+        }
+    </div>
 }
 
 export default OrderSummary;

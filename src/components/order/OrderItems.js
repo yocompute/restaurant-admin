@@ -1,19 +1,7 @@
-import React, { useEffect } from 'react';
-// import { Link } from 'react-router-dom';
+import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { makeStyles } from '@material-ui/core/styles';
-
-
-// import Button from '@material-ui/core/Button'
-// import { CartSummary } from '../../components/cart/CartSummary';
-// import { PaymentMethodSelect } from '../../components/common/PaymentMethodSelect'
-import { setPage } from  '../../redux/page/page.actions';
-// import { PAYMENT_PAGE } from '../../const';
-import { useHistory } from 'react-router-dom';
-
-// import Header from '../../components/common/Header'
-
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -70,17 +58,9 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+// item --- IOrderItem: { type, product, quantity }
 const OrderItems = ({items}) => {
     const classes = useStyles();
-    // const history = useHistory();
-
-    // useEffect(() => {
-    //     setPage(PAYMENT_PAGE);
-    // }, [setPage])
-
-    // if(path){
-    //     history.push(path);
-    // }
 
     return (
         <div className={classes.root}>
@@ -89,22 +69,22 @@ const OrderItems = ({items}) => {
             items.map(item =>
                 {
                     return item.quantity > 0 &&
-                    <div className={classes.cartItem} key={item._id}>
-                    <div className={classes.productRow}>
-                        <div className={classes.productNameCol}>{item.product.name}</div>
-                        <div className={classes.quantityCol}>x{item.quantity}</div>
-                        <div className={classes.productPriceCol}>${item.subTotal}</div>
-                    </div>
-                    {
-                        item.additions && item.additions.length > 0 &&
-                        item.additions.map(it =>
-                            <div key={it.product._id} className={classes.additionRow}>
-                                <div className={classes.additionNameCol}>{it.name}</div>
-                                <div className={classes.additionQuantityCol}>x{it.quantity}</div>
-                                <div className={classes.additionPriceCol}>${it.price * it.quantity}</div>
-                            </div>
-                        )
-                    }
+                    <div className={classes.cartItem} key={item.product._id}>
+                        <div className={classes.productRow}>
+                            <div className={classes.productNameCol}>{item.product.name}</div>
+                            <div className={classes.quantityCol}>x{item.quantity}</div>
+                            <div className={classes.productPriceCol}>${item.subTotal}</div>
+                        </div>
+                        {
+                            item.additions && item.additions.length > 0 &&
+                            item.additions.map(it =>
+                                <div key={it.product._id} className={classes.additionRow}>
+                                    <div className={classes.additionNameCol}>{it.name}</div>
+                                    <div className={classes.additionQuantityCol}>x{it.quantity}</div>
+                                    <div className={classes.additionPriceCol}>${it.price * it.quantity}</div>
+                                </div>
+                            )
+                        }
                     </div>
                 }
             )

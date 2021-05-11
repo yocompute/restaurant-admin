@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 import { makeStyles } from '@material-ui/core/styles';
 
-import { QuantityInput } from '../../components/common/QuantityInput';
+import { QuantityInput } from '../common/QuantityInput';
 import { updateCartItem } from '../../redux/cart/cart.actions';
 import { selectProductQuantity } from '../../redux/cart/cart.selectors';
 
@@ -46,37 +46,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const OrderAddition = ({brand, product, addition, updateCartItem, quantity, onChange}) => {
+/**
+ * 
+ * @param {*} addition: IProduct 
+ * @returns 
+ */
+const AdditionSelect = ({parentProduct, addition, quantity, onChange}) => {
     const classes = useStyles();
-
-    function toCartItem(product){
-        return {
-            productId: product._id,
-            productName: product.name,
-            brandId: product.brand._id,
-            price: product.price,
-            cost: product.cost,
-            saleTaxRate: product.saleTaxRate,
-            purchaseTaxRate: product.purchaseTaxRate,
-            quantity: 0
-        }
-    }
 
     /**
      * 
      * @param {*} d  {item [CartItem or AddtionItem], quantity [number]}
      */
     function handleQuantityChange(d) {
-        // addtion, product, d.quantity
-
-        // if(d.item){
-        //     updateCartItem({
-        //         ...d.item,
-        //         quantity: d.quantity
-        //     });
-        // }
-
-        onChange(product, addition, d.quantity);
+        onChange(parentProduct, addition, d.quantity);
     }
 
     return addition &&
@@ -89,13 +72,13 @@ const OrderAddition = ({brand, product, addition, updateCartItem, quantity, onCh
                 <QuantityInput
                     onChange={handleQuantityChange}
                     val={quantity}
-                    item={toCartItem(addition)}
+                    item={addition}
                 />
             </div>
         </div>
 }
 
-OrderAddition.propTypes = {
+AdditionSelect.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             id: PropTypes.string
@@ -106,12 +89,11 @@ OrderAddition.propTypes = {
 
 
 const mapStateToProps = state => ({
-    product: state.product,
-    brand: state.brand,
+    parentProduct: state.product,
     quantity: selectProductQuantity(state)
 });
 
 export default connect(
     mapStateToProps,
     {updateCartItem}
-)(OrderAddition);
+)(AdditionSelect);

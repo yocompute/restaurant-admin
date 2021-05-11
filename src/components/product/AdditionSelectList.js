@@ -10,7 +10,7 @@ import { updateCombo } from '../../redux/product/product.actions';
 import { selectProductQuantity } from '../../redux/cart/cart.selectors';
 import { selectComboAdditions } from '../../redux/product/product.selectors';
 
-import OrderAddition from '../../components/product/OrderAddition';
+import AdditionSelect from './AdditionSelect';
 import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,55 +23,47 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const OrderAdditions = ({brand, product, additions, updateCartItem, quantity, combo, comboAdditions, updateCombo, selectedAdditions}) => {
+/**
+ * 
+ * @param {*} additions --- Additons available to select 
+ * @returns 
+ */
+const AdditionSelectList = ({brand, parentProduct, additions, updateCartItem, quantity, combo, comboAdditions, updateCombo, selectedAdditions}) => {
     const classes = useStyles();
     const {t} = useTranslation();
-    
-    function toCartItem(product){
-        return {
-            productId: product._id,
-            productName: product.name,
-            brandId: brand._id,
-            price: product.price,
-            cost: product.cost,
-            saleTaxRate: product.saleTaxRate,
-            purchaseTaxRate: product.purchaseTaxRate,
-            quantity: 0
-        }
-    }
 
     /**
      * 
      * @param {*} d  {item [CartItem or AddtionItem], quantity [number]}
      */
-    function handleChange(product, addition, additionQuantity) {
+    function handleChange(parentProduct, addition, additionQuantity) {
         if(comboAdditions.length === 0){
             if(additionQuantity !== 0){ // add new
                 const comboId = uuidv4();
-                updateCombo(comboId, product, addition, additionQuantity);
+                updateCombo(comboId, parentProduct, addition, additionQuantity);
             }else{
-                // change back to single product
-                updateCombo(combo.comboId, product, addition, additionQuantity);
+                // change back to single parentProduct
+                updateCombo(combo.comboId, parentProduct, addition, additionQuantity);
             }
         }else{
-            updateCombo(combo.comboId, product, addition, additionQuantity);
+            updateCombo(combo.comboId, parentProduct, addition, additionQuantity);
         }
     }
 
-    return additions ?
+    return additions && additions.length > 0 ?
         <div>
             <div className={classes.title}>{t("Additions")}:</div>
             {
 
-                additions.map(a => 
-                    <OrderAddition key={a._id} addition={a} onChange={handleChange}/>
+                additions.map(addition => 
+                    <AdditionSelect key={addition._id} addition={addition} onChange={handleChange}/>
                 )
             }
         </div>
         :<div />
 }
 
-OrderAdditions.propTypes = {
+AdditionSelectList.propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             id: PropTypes.string
@@ -82,7 +74,7 @@ OrderAdditions.propTypes = {
 
 
 const mapStateToProps = state => ({
-    product: state.product,
+    parentProduct: state.product,
     brand: state.brand,
     quantity: selectProductQuantity(state),
     combo: state.combo,
@@ -95,4 +87,4 @@ export default connect(
         updateCartItem,
         updateCombo
     }
-)(OrderAdditions);
+)(AdditionSelectList);
